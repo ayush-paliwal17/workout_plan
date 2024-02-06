@@ -1,4 +1,5 @@
 from utils import *
+import os
 
 class weight_training:
     def circuit(self,member_details):
@@ -55,6 +56,7 @@ class WorkoutPlan(weight_training):
     def shoulders_legs(self,member_details):
         return {"Weight_Training" : super().shoulders_legs(member_details), "Cardio" : Workout.get_cardio(ex_id=4)} if member_details["Cardio"] == "Yes" else {"Weight_Training" : super().shoulders_legs(member_details)}
 
+    
     def get_workout(self,member_details):
         if member_details["Day"] == '0':
             print("Cardio")
@@ -74,3 +76,19 @@ class WorkoutPlan(weight_training):
         
         return workout
 
+
+def main():
+    #get member_id from user
+    try:
+        member_id = os.environ["Member_ID"]
+    except:
+        print("Enter The Member_ID")
+    
+    member_details = member_data.get_member_details(id_num=member_id)
+    print(f"Hi {member_details['Name']}, Welcome Back.\nToday we will be training : ",end="")
+    member = WorkoutPlan()    
+    res = member.get_workout(member_details=member_details)
+    print(res)
+
+if __name__ == "__main__":
+    main()
