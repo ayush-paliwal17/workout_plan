@@ -1,72 +1,76 @@
+from utils import *
+
 class weight_training:
     def circuit(self,member_details):
         if member_details["Batch"] == "A":
-            member_details["Batch"] = "B"
-            return("circuit 1")
+            member_data.update_column(key='Batch',value='B',id_value=member_details['id_num'])
+            return(Workout.get_weight_training(ex_id=0.1))
 
         elif member_details["Batch"] == "B":
-            member_details["Batch"] = "A"
-            return("circuit 2")
+            member_data.update_column(key='Batch',value='A',id_value=member_details['id_num'])
+            member_data.update_column(key='Day',value='1',id_value=member_details['id_num'])
+            return(Workout.get_weight_training(ex_id=0.2))
 
 
     def chest_triceps(self,member_details):
         if member_details["Batch"] == "A":
-            member_details["Batch"] = "B"
-            return ("chest_triceps_1")
+            return (Workout.get_weight_training(ex_id=1.1))
         elif member_details["Batch"] == "B":
-            member_details["Batch"] = "C"
-            return ("chest_triceps_2")
+            return (Workout.get_weight_training(ex_id=1.2))
         else:
-            member_details["Batch"] = "A"
-            return ("chest_triceps_3")
+            return (Workout.get_weight_training(ex_id=1.3))
 
 
     def back_biceps(self,member_details):
         if member_details["Batch"] == "A":
-            member_details["Batch"] = "B"
-            return ("back_biceps_1")
+            return (Workout.get_weight_training(ex_id=2.1))
         elif member_details["Batch"] == "B":
-            member_details["Batch"] = "C"
-            return ("back_biceps_2")
+            return (Workout.get_weight_training(ex_id=2.2))
         else:
-            member_details["Batch"] = "A"
-            return ("back_biceps_3")
+            return (Workout.get_weight_training(ex_id=2.3))
 
 
     def shoulders_legs(self,member_details):
         if member_details["Batch"] == "A":
-            member_details["Batch"] = "B"
-            return ("shoulders_legs_1")
+            member_data.update_column(key='Batch',value='B',id_value=member_details['id_num'])
+            return (Workout.get_weight_training(ex_id=3.1))
         elif member_details["Batch"] == "B":
-            member_details["Batch"] = "C"
-            return ("shoulders_legs_2")
+            member_data.update_column(key='Batch',value='C',id_value=member_details['id_num'])
+            return (Workout.get_weight_training(ex_id=3.2))
         else:
-            member_details["Batch"] = "A"
-            return ("shoulders_legs_3")
+            member_data.update_column(key='Batch',value='A',id_value=member_details['id_num'])
+            return (Workout.get_weight_training(ex_id=3.3))
 
 
 class WorkoutPlan(weight_training):
-    def circuit(member_details):
-        return super().circuit(member_details)+ "cardio1" if member_details["cardio"] == "Yes" else super().circuit(member_details)
+    def circuit(self,member_details):
+        return {"Weight_Training" : super().circuit(member_details), "Cardio" : Workout.get_cardio(ex_id=1)} if member_details["Cardio"] == "Yes" else {"Weight_Training" : super().circuit(member_details)}
 
-    def chest_triceps(member_details):
-        return super().chest_triceps(member_details) + "cardio2" if member_details["cardio"] == "Yes" else super().chest_triceps(member_details)
+    def chest_triceps(self,member_details):
+        return {"Weight_Training" : super().chest_triceps(member_details), "Cardio" : Workout.get_cardio(ex_id=2)} if member_details["Cardio"] == "Yes" else {"Weight_Training" : super().chest_triceps(member_details)}
     
     def back_biceps(self,member_details):
-        return super().back_biceps(member_details) + "cardio3" if member_details["cardio"] == "Yes" else super().chest_triceps(member_details)
+        return {"Weight_Training" : super().back_biceps(member_details), "Cardio" : Workout.get_cardio(ex_id=3)} if member_details["Cardio"] == "Yes" else {"Weight_Training" : super().back_biceps(member_details)}
     
-    def shoulders_legs(member_details):
-        return super().shoulders_legs(member_details) + "cardio4" if member_details["cardio"] == "Yes" else super().chest_triceps(member_details)
+    def shoulders_legs(self,member_details):
+        return {"Weight_Training" : super().shoulders_legs(member_details), "Cardio" : Workout.get_cardio(ex_id=4)} if member_details["Cardio"] == "Yes" else {"Weight_Training" : super().shoulders_legs(member_details)}
 
+    def get_workout(self,member_details):
+        if member_details["Day"] == '0':
+            print("Cardio")
+            workout = WorkoutPlan.circuit(self,member_details)
+        elif member_details["Day"] == '1':
+            print("Chest and Triceps")
+            member_data.update_column(key='Day',value='2',id_value=member_details['id_num'])
+            workout = WorkoutPlan.chest_triceps(self,member_details)
+        elif member_details["Day"] == '2':
+            print("Back and Biceps")
+            workout = WorkoutPlan.back_biceps(self,member_details)
+            member_data.update_column(key='Day',value='3',id_value=member_details['id_num'])
+        elif member_details["Day"] == '3':
+            print("Shoulders and Legs")
+            member_data.update_column(key='Day',value='1',id_value=member_details['id_num'])
+            workout = WorkoutPlan.shoulders_legs(self,member_details)
+        
+        return workout
 
-members = (
-    {"Name" : "Ayush", "Age" : 23, "class" : "I","cardio" : "Yes", "Batch" : "A","Day" : "1"},
-    {"Name" : "Mrityunjay", "Age" : 23, "class" : "B","cardio" : "No", "Batch" : "B","Day" : "1"},
-    {"Name" : "Harsh", "Age" : 23, "class" : "I","cardio" : "No" , "Batch" : "C","Day" : "1"},
-    {"Name" : "Karan", "Age" : 23, "class" : "I","cardio" : "Yes", "Batch" : "A","Day" : "1"}
-)
-
-# for member in members:
-#     print(WorkoutPlan.back_biceps(member))
-ayush = WorkoutPlan()
-print(ayush.back_biceps(member_details=members[0]))
