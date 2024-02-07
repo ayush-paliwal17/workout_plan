@@ -1,5 +1,6 @@
 from utils import *
 import os
+import tkinter as tk
 
 class weight_training:
     def circuit(self,member_details):
@@ -78,17 +79,26 @@ class WorkoutPlan(weight_training):
 
 
 def main():
-    #get member_id from user
-    try:
-        member_id = os.environ["Member_ID"]
-    except:
-        print("Enter The Member_ID")
-    
-    member_details = member_data.get_member_details(id_num=member_id)
-    print(f"Hi {member_details['Name']}, Welcome Back.\nToday we will be training : ",end="")
-    member = WorkoutPlan()    
-    res = member.get_workout(member_details=member_details)
-    print(res)
+    root = tk.Tk() #calls the constructor, root is now a window
+
+    root.geometry("700x500") #set the width and height of the window
+    root.title("My GUI") #set the title of the window
+
+    myentry = tk.Entry(root)
+    myentry.pack(padx=10,pady=5)
+
+    def get_input():
+        member_id = myentry.get()
+        member_details = member_data.get_member_details(id_num=member_id)
+        print(f"Hi {member_details['Name']}, Welcome Back.\nToday we will be training : ",end="")
+        member = WorkoutPlan()    
+        res = member.get_workout(member_details=member_details)
+        print(res)
+        
+    button = tk.Button(root,text="Click Me!!",font=('Arial',16),command=get_input)
+    button.pack(padx=5,pady=5)
+
+    root.mainloop()
 
 if __name__ == "__main__":
     main()
