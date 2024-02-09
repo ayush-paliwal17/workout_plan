@@ -1,1 +1,30 @@
 A personal Trainer which will generate a personalized daily workout.
+
+Stages.
+Stage 1 - a. The gym member can interact with the application, enter their member_id and have a pre-defined workout generated for them. 
+          b. We are targeting two-body parts approach. The application should automatically change the body-parts after a workout and should generate different workout for the same body-parts (minimum 3 combinations)
+
+Stage 2 - a. Create a GUI, 
+          b. which takes member_id as input, 
+          c. a generate workout button, 
+          d. have the workout printed on the screen with a different image, 
+          e. remove all other widgets.
+
+Stage 3 - We must be able to print the workout on a paper. 
+
+Stage 4 - Add methods for customers such as see profile, choose body-parts to train, maybe change approach (circuit,2 parts,1 part etc), select their own workout, see workout history(upto 10 days)
+
+Stage 5 - This is where the gym owner comes in,
+# for iron fitness gym
+#1. have two buttons, one for customers to generate their workout and one for the trainers to generate workout based on their choice
+#2. for trainers have option to select body parts, based on that have a dropdown with exercises based on body part and cardio
+#3. have a method to add member data and print member data along with the workout
+#4. add button for members to check thier profile, workout history of the last 10 days(it implements a queue)
+#5. it is prefered to be able to print the workout so we need to have that as well
+#6. Have an option for members to select custom workouts
+
+Stage 6 - to make the app look better use customtkinter intead of tkinter
+
+
+09/02/2024 - {14:44 - Stage 1 is completed. Stage 2 is almost complete, It currently in stage 2.d, 2.e is completed.
+              17:39 - Stage 2 is compoleted}

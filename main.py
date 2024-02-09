@@ -1,6 +1,7 @@
 from utils import *
 import os
 import tkinter as tk
+from PIL import Image,ImageTk
 
 class weight_training:
     def circuit(self,member_details):
@@ -60,45 +61,100 @@ class WorkoutPlan(weight_training):
     
     def get_workout(self,member_details):
         if member_details["Day"] == '0':
-            print("Cardio")
+            part = 'Cardio'
             workout = WorkoutPlan.circuit(self,member_details)
         elif member_details["Day"] == '1':
-            print("Chest and Triceps")
+            part = "Chest and Triceps"
             member_data.update_column(key='Day',value='2',id_value=member_details['id_num'])
             workout = WorkoutPlan.chest_triceps(self,member_details)
         elif member_details["Day"] == '2':
-            print("Back and Biceps")
+            part = "Back and Biceps"
             workout = WorkoutPlan.back_biceps(self,member_details)
             member_data.update_column(key='Day',value='3',id_value=member_details['id_num'])
         elif member_details["Day"] == '3':
-            print("Shoulders and Legs")
+            part = "Shoulders and Legs"
             member_data.update_column(key='Day',value='1',id_value=member_details['id_num'])
             workout = WorkoutPlan.shoulders_legs(self,member_details)
         
-        return workout
+        return workout,part
 
 
 def main():
-    root = tk.Tk() #calls the constructor, root is now a window
+    # #Action of the Generate Workout button
+    root = tk.Tk()
+    root.title("Iron Fitness Gym")
+    root.geometry("700x400")
 
-    root.geometry("700x500") #set the width and height of the window
-    root.title("My GUI") #set the title of the window
 
-    myentry = tk.Entry(root)
-    myentry.pack(padx=10,pady=5)
+    def display_workout(res,name,part=None):
+        #greet Button
+        greet = tk.Label(root,text=f"Hi {name}\n Today we will be training {part}",background='black',fg='White',font=18)
+        greet.pack(pady=10)
 
-    def get_input():
+        wt = res['Weight_Training']
+        wt_str = '\n'.join(wt)
+        cardio = res['Cardio']
+        cd = '\n'.join(cardio)
+
+        #weight training label
+        wt_label =tk.Label(root,text=f"Weight Training : ",background='Black',fg='White',font=10,justify='left')
+        wt_label.place(x=150,y=150)
+        wt2_label =tk.Label(root,text=wt_str,background='Black',fg='White',font=10,justify='left')
+        wt2_label.place(x=300,y=150)
+
+        #Cardio Label
+        cd_label =tk.Label(root,text=f"cardio: ",background='Black',fg='White',font=10,justify='left')
+        cd_label.place(x=180,y=310)
+        cd_label =tk.Label(root,text=cd,background='Black',fg='White',font=10,justify='left')
+        cd_label.place(x=300,y=310)
+
+
+    def get_input(panel):
         member_id = myentry.get()
-        member_details = member_data.get_member_details(id_num=member_id)
-        print(f"Hi {member_details['Name']}, Welcome Back.\nToday we will be training : ",end="")
-        member = WorkoutPlan()    
-        res = member.get_workout(member_details=member_details)
-        print(res)
-        
-    button = tk.Button(root,text="Click Me!!",font=('Arial',16),command=get_input)
-    button.pack(padx=5,pady=5)
+        if member_id:
+            button.place_forget() #remove button after click
+            entry_label.place_forget() #remove entry label
+            myentry.place_forget() #remove entry box
+            path = r'gallery\display.jpg'
+            img = ImageTk.PhotoImage(Image.open(path))
+            panel.configure(image=img)
+            panel.image = img
+            member_details = member_data.get_member_details(id_num=member_id)
+            member = WorkoutPlan()    
+            res,part = member.get_workout(member_details=member_details)
+            display_workout(res,name=member_details['Name'],part=part)
+
+
+    #Home Image
+    path = r'gallery\home.png'
+    img = ImageTk.PhotoImage(Image.open(path))
+    panel = tk.Label(root,image=img)
+    panel.image = img
+    panel.place(relheight=1,relwidth=1)
+
+    #Gym Label
+    gym_label = tk.Label(root,text='IRON  FITNESS  GYM',font=('Papyrus',18),background='Black',fg='White')
+    gym_label.pack(pady=1)
+
+    #gym moto label
+    moto_label = tk.Label(root,text='Break Your Limits!',font=('Papyrus',12),background='Black',fg='White')
+    moto_label.pack()
+
+    #Member_id entry
+    myentry = tk.Entry(root,bg='#434343',fg='White')
+    myentry.place(x=350,y=100)
+
+    #Entry Label
+    entry_label = tk.Label(root,text='Enter Your ID',font=('Arial',10),background='Black',fg='White')
+    entry_label.place(x=240,y=100)
+
+    #Generate workout button
+    button = tk.Button(root,text="Generate Workout",font=('Denmark',10),background='Black',fg='White',command=lambda : get_input(panel))
+    button.place(x=290,y=125)
 
     root.mainloop()
+
+
 
 if __name__ == "__main__":
     main()
