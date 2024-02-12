@@ -1,3 +1,8 @@
+import os
+import tempfile
+import docx
+from docx.shared import Pt
+from docx.enum.text import WD_ALIGN_PARAGRAPH
 import sqlite3
 
 connnection = sqlite3.connect('gym_data.db') #connect to a local database, create a new one if it dosen't exist
@@ -22,17 +27,18 @@ class member_data:
             where id_num = '{id_num}'
         """)
         result = cursor.fetchone()
-
-        member = {
-            "id_num" : id_num,
-            "Name" : result[1],
-            "Age" : result[2],
-            "Day" : result[5],
-            "Cardio" : result[3],
-            "Batch" : result[4]
-                }
-        
-        return member
+        if result:
+            member = {
+                "id_num" : id_num,
+                "Name" : result[1],
+                "Age" : result[2],
+                "Day" : result[5],
+                "Cardio" : result[3],
+                "Batch" : result[4]
+                    }
+            return member
+        else:
+            print("Invalid Member ID")
 
 
     def get_all_members():
@@ -71,11 +77,48 @@ class Workout:
         cardio = [x for x in result[1:]]
         return cardio
 
-# member_data.update_column(key='Day',value='3',id_value='1')
-# print(member_data.get_all_members())
-# cursor.execute("""
-#         UPDATE member_data
-#         SET 'day' = '1'
-#         where id_num = '1'
-# """)
-# print(member_data.get_all_members())
+class Features:
+    def print_doc(result_dict,name,part):
+
+        #Initialize The Document
+        doc = docx.Document()
+
+        #Page Heading
+        # head = doc.add_heading(level = 0).add_run("IRON FITNESS GYM")
+        head = doc.add_heading(level = 0)
+        head.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        head = head.add_run("IRON FITNESS GYM")
+        font = head.font
+        font.size = Pt(40)
+
+        #Greeting
+        para = doc.add_paragraph().add_run(f"Hi {name},\nToday we will be training {part}")
+        font = para.font
+        font.size = Pt(20)
+
+        #Weight Training
+        wt_head = doc.add_heading(level =1).add_run("Weight Training :")
+        font = wt_head.font
+        font.size = Pt(20)
+
+        for item in result_dict['Weight_Training']:
+            para = doc.add_paragraph(style = 'List Number').add_run(item)
+            font = para.font
+            font.size = Pt(18)
+
+        #Cardio
+        cardio = result_dict.get('Cardio')
+        if cardio:
+            cardio_head = doc.add_heading(level = 1).add_run("Cardio : ")
+            font = cardio_head.font
+            font.size = Pt(20)    
+
+            for item in cardio:
+                para = doc.add_paragraph(style='List Number').add_run(item)
+                font = para.font
+                font.size = Pt(18)
+
+        #Open Temp file
+        filename = tempfile.mktemp(".doc")
+        doc.save(filename)
+        os.startfile(filename)

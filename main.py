@@ -1,5 +1,4 @@
 from utils import *
-import os
 import tkinter as tk
 from PIL import Image,ImageTk
 
@@ -80,7 +79,7 @@ class WorkoutPlan(weight_training):
 
 
 def main():
-    # #Action of the Generate Workout button
+    #Action of the Generate Workout button
     root = tk.Tk()
     root.title("Iron Fitness Gym")
     root.geometry("700x400")
@@ -93,8 +92,8 @@ def main():
 
         wt = res['Weight_Training']
         wt_str = '\n'.join(wt)
-        cardio = res['Cardio']
-        cd = '\n'.join(cardio)
+        cardio = res.get('Cardio')
+
 
         #weight training label
         wt_label =tk.Label(root,text=f"Weight Training : ",background='Black',fg='White',font=10,justify='left')
@@ -103,10 +102,16 @@ def main():
         wt2_label.place(x=300,y=150)
 
         #Cardio Label
-        cd_label =tk.Label(root,text=f"cardio: ",background='Black',fg='White',font=10,justify='left')
-        cd_label.place(x=180,y=310)
-        cd_label =tk.Label(root,text=cd,background='Black',fg='White',font=10,justify='left')
-        cd_label.place(x=300,y=310)
+        if cardio:
+            cd = '\n'.join(cardio)
+            cd_label =tk.Label(root,text=f"cardio: ",background='Black',fg='White',font=10,justify='left')
+            cd_label.place(x=180,y=310)
+            cd_label =tk.Label(root,text=cd,background='Black',fg='White',font=10,justify='left')
+            cd_label.place(x=300,y=310)
+
+        #print button
+        print_button = tk.Button(root,text='Print Workout',font=('Denmark',10),background='Black',fg='White',command=lambda: Features.print_doc(result_dict=res,name=name,part=part))
+        print_button.place(x=550,y=350)
 
 
     def get_input(panel):
@@ -115,7 +120,7 @@ def main():
             button.place_forget() #remove button after click
             entry_label.place_forget() #remove entry label
             myentry.place_forget() #remove entry box
-            path = r'gallery\display.jpg'
+            path = r'C:\Users\Dell\Desktop\Project\Personal_Trainer\gallery\display.jpg'
             img = ImageTk.PhotoImage(Image.open(path))
             panel.configure(image=img)
             panel.image = img
@@ -126,7 +131,7 @@ def main():
 
 
     #Home Image
-    path = r'gallery\home.png'
+    path = r'C:\Users\Dell\Desktop\Project\Personal_Trainer\gallery\home.png'
     img = ImageTk.PhotoImage(Image.open(path))
     panel = tk.Label(root,image=img)
     panel.image = img

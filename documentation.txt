@@ -22,9 +22,14 @@ Stage 5 - This is where the gym owner comes in,
 #4. add button for members to check thier profile, workout history of the last 10 days(it implements a queue)
 #5. it is prefered to be able to print the workout so we need to have that as well
 #6. Have an option for members to select custom workouts
+#7 Allow user to store their photo to track their progress, eg upload monthly photos
 
 Stage 6 - to make the app look better use customtkinter intead of tkinter
 
 
 09/02/2024 - {14:44 - Stage 1 is completed. Stage 2 is almost complete, It currently in stage 2.d, 2.e is completed.
               17:39 - Stage 2 is compoleted}
+
+10/02/2024 - {17:20 Successfully added the printing function, now I need to add styling and proper format to the output, I have decided to use doc file, I can use python-docx module for it}
+
+11/02/2024 - {11:55 - Stage 3 is completed, successfulyy added styling to the paper, added some error handling such as when the member does not have to perform cardio}
