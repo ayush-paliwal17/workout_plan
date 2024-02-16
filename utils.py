@@ -1,10 +1,11 @@
 import os
+import json
 import tempfile
 import docx
 from docx.shared import Pt
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 import sqlite3
-
+from datetime import date
 connnection = sqlite3.connect('gym_data.db') #connect to a local database, create a new one if it dosen't exist
 
 cursor = connnection.cursor() #cursor allows us to execute sql commands, it is an interface between the database and sql.
@@ -122,3 +123,28 @@ class Features:
         filename = tempfile.mktemp(".doc")
         doc.save(filename)
         os.startfile(filename)
+
+    def add_history(id_num,workout):
+
+        t_date = str(date.today())
+
+        with open("workout_history.json") as f:
+            fi_data = json.load(f)
+
+
+        queue = fi_data[id_num]
+        queue.append({t_date : workout})
+        for i in range(10):
+            if len(queue)>3:
+                queue.pop(0)
+
+        fi_data[id_num] = queue        
+        with open("workout_history.json",'w') as f:
+            json.dump(fi_data,f)
+
+
+    def get_history(id_num):
+        with open("workout_history.json") as f:
+            fi_data = json.load(f)
+        queue = fi_data[id_num]
+        return queue

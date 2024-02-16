@@ -33,3 +33,4 @@ Stage 6 - to make the app look better use customtkinter intead of tkinter
 10/02/2024 - {17:20 Successfully added the printing function, now I need to add styling and proper format to the output, I have decided to use doc file, I can use python-docx module for it}
 
 11/02/2024 - {11:55 - Stage 3 is completed, successfulyy added styling to the paper, added some error handling such as when the member does not have to perform cardio}
+
