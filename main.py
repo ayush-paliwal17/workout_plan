@@ -79,7 +79,7 @@ class WorkoutPlan(weight_training):
 
 class Members:
     def main(root):
-        def workout_history(id_num):
+        def workout_history(id_num,data):
             #Creating a Frame
             frame = tk.Frame(root)
             frame.pack(side='top',expand=True,fill='both')
@@ -98,7 +98,7 @@ class Members:
             #gym moto label
             moto_label = tk.Label(root,text='Break Your Limits!',font=('Papyrus',12),background='Black',fg='White')
             moto_label.place(x=(int(700-moto_label.winfo_reqwidth())/2),y=45)
-            
+
             #workout history
             history = Features.get_history(id_num=id_num)
             history = [str(x) for x in history]
@@ -106,8 +106,12 @@ class Members:
             history_label = tk.Message(root,text=final_history,background='Black',fg='White',font=10,width=700)
             history_label.place(x=0,y=100)
 
+            #back Button
+            back_button = tk.Button(root,text="Back",font=('Denmark',12),background='Black',fg='White',command=lambda : [print_member_details(data=data),Features.delete_widget([history_label,back_button])])
+            back_button.place(x=600,y=300)
 
-        def display_workout(res,name,workout_button,part=None):
+
+        def display_workout(res,data,workout_button,part=None):
             #Remove Button after click
             workout_button.place_forget()
 
@@ -126,12 +130,16 @@ class Members:
                 cd = '\n'.join(cardio)
                 cd_label =tk.Label(root,text=f"cardio: ",background='Black',fg='White',font=10,justify='left')
                 cd_label.place(x=180,y=310)
-                cd_label =tk.Label(root,text=cd,background='Black',fg='White',font=10,justify='left')
-                cd_label.place(x=300,y=310)
+                cd_label_2 =tk.Label(root,text=cd,background='Black',fg='White',font=10,justify='left')
+                cd_label_2.place(x=300,y=310)
 
             #print button
-            print_button = tk.Button(root,text='Print Workout',font=('Denmark',10),background='Black',fg='White',command=lambda: Features.print_doc(result_dict=res,name=name,part=part))
+            print_button = tk.Button(root,text='Print Workout',font=('Denmark',10),background='Black',fg='White',command=lambda: Features.print_doc(result_dict=res,data=data['Name'],part=part))
             print_button.place(x=550,y=350)
+
+            #back Button
+            back_button = tk.Button(root,text="Back",font=('Denmark',12),background='Black',fg='White',command=lambda : [print_member_details(data=data),Features.delete_widget([back_button,wt_label,cd_label_2,wt2_label,cd_label,print_button])])
+            back_button.place(x=600,y=300)
 
 
         def print_member_details(data):
@@ -144,17 +152,16 @@ class Members:
             member_data_label.place(x=int((700-member_data_label.winfo_reqwidth())/2),y=110)
 
             #Create Object for member
-            member = WorkoutPlan()    
+            member = WorkoutPlan()
             res,part = member.get_workout(member_details=data)
 
             #Generate workout button
-            button = tk.Button(root,text="Generate Workout",font=('Denmark',15),background='Black',fg='White',command=lambda : display_workout(res,name=data['Name'],part=part,workout_button=button))
-            button.place(x=int(700/4-button.winfo_reqwidth()/2),y=200)
+            workout_button = tk.Button(root,text="Generate Workout",font=('Denmark',15),background='Black',fg='White',command=lambda : [display_workout(res,data=data,part=part,workout_button=workout_button),Features.delete_widget([history_button])])
+            workout_button.place(x=int(700/4-workout_button.winfo_reqwidth()/2),y=200)
 
             #Check Workout History button
-            history_button = tk.Button(root,text='Workout History',font=('Denmark',15),background='Black',fg='White',command=lambda: workout_history(data["id_num"]))
+            history_button = tk.Button(root,text='Workout History',font=('Denmark',15),background='Black',fg='White',command=lambda: workout_history(id_num=data["id_num"],data=data))
             history_button.place(x=int(700*3/4-history_button.winfo_reqwidth()/2),y=200)
-
 
 
         def get_input(panel):
@@ -200,6 +207,67 @@ class Members:
         button.place(x=int((700-button.winfo_reqwidth())/2),y=125)
 
 
+class Trainer:
+    def main(root):
+        def get_input(panel):
+            password = myentry.get()
+            if password == 'A':
+                frame.destroy()
+                new_frame = tk.Frame(root)
+                new_frame.pack(side='top',expand=True,fill='both')
+                path = r'C:\Users\Dell\Desktop\Project\Personal_Trainer\gallery\display.jpg'
+                img = ImageTk.PhotoImage(Image.open(path))
+                panel = tk.Label(root,image=img)
+                panel.image = img
+                panel.place(relheight=1,relwidth=1)
+
+                #Gym Label
+                gym_label = tk.Label(root,text='IRON  FITNESS  GYM',font=('Papyrus',18),background='Black',fg='White')
+                gym_label.place(x=(int(700-gym_label.winfo_reqwidth())/2))
+
+                #gym moto label
+                moto_label = tk.Label(root,text='Break Your Limits!',font=('Papyrus',12),background='Black',fg='White')
+                moto_label.place(x=(int(700-moto_label.winfo_reqwidth())/2),y=45)
+
+            else:
+                wrong_pass_label = tk.Label(root,text="Wrong Password. Try Again",font=('Arial',10),background='Black',fg='Red')
+                wrong_pass_label.place(x=int((700-wrong_pass_label.winfo_reqwidth())/2),y=150)
+
+
+
+        #Creating a Frame
+        frame = tk.Frame(root)
+        frame.pack(side='top',expand=True,fill='both')
+
+        #Home Image
+        path = r'C:\Users\Dell\Desktop\Project\Personal_Trainer\gallery\home.png'
+        img = ImageTk.PhotoImage(Image.open(path))
+        panel = tk.Label(root,image=img)
+        panel.image = img
+        panel.place(relheight=1,relwidth=1)
+
+        #Gym Label
+        gym_label = tk.Label(root,text='IRON  FITNESS  GYM',font=('Papyrus',18),background='Black',fg='White')
+        gym_label.place(x=(int(700-gym_label.winfo_reqwidth())/2))
+
+        #gym moto label
+        moto_label = tk.Label(root,text='Break Your Limits!',font=('Papyrus',12),background='Black',fg='White')
+        moto_label.place(x=(int(700-moto_label.winfo_reqwidth())/2),y=45)
+
+        #Member_id entry
+        myentry = tk.Entry(root,show='*',bg='#434343',fg='White')
+        myentry.place(x=350,y=100)
+
+        #Entry Label
+        entry_label = tk.Label(root,text='Enter Password',font=('Arial',10),background='Black',fg='White')
+        entry_label.place(x=240,y=100)
+
+        #Login Button
+        button = tk.Button(root,text="Login",font=('Denmark',10),background='Black',fg='White',command=lambda : get_input(panel))
+        button.place(x=int((700-button.winfo_reqwidth())/2),y=125)
+
+
+
 def home(root):
     #Home Screen
     path = r'C:\Users\Dell\Desktop\Project\Personal_Trainer\gallery\home.png'
@@ -221,7 +289,7 @@ def home(root):
     button.place(x=int(700/4-button.winfo_reqwidth()/2),y=125)
 
     #Trainer Login
-    button = tk.Button(root,text="Trainer Login",font=('Denmark',13),background='Black',fg='White')
+    button = tk.Button(root,text="Trainer Login",font=('Denmark',13),background='Black',fg='White',command=lambda:Trainer.main(root))
     button.place(x=int(700*3/4-button.winfo_reqwidth()/2),y=125)
 
 

@@ -6,6 +6,7 @@ from docx.shared import Pt
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 import sqlite3
 from datetime import date
+
 connnection = sqlite3.connect('gym_data.db') #connect to a local database, create a new one if it dosen't exist
 
 cursor = connnection.cursor() #cursor allows us to execute sql commands, it is an interface between the database and sql.
@@ -134,9 +135,8 @@ class Features:
 
         queue = fi_data[id_num]
         queue.append({t_date : workout})
-        for i in range(10):
-            if len(queue)>3:
-                queue.pop(0)
+        if len(queue)>3:
+            queue.pop(0)
 
         fi_data[id_num] = queue        
         with open("workout_history.json",'w') as f:
@@ -148,3 +148,8 @@ class Features:
             fi_data = json.load(f)
         queue = fi_data[id_num]
         return queue
+    
+
+    def delete_widget(widget_list):
+        for widget in widget_list:
+            widget.place_forget()
