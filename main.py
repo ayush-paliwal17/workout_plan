@@ -232,29 +232,31 @@ class Trainer:
             def cardio(cardio_combobox):
                 cardio_combobox.set('')
                 cardio_combobox['values'] = ("WALK","Cross Trainer","Cycle","Mountain Climbs","Burpees","High Knees","Walk+Run","Crunch","Leg Raises","Plank")
-                cardio_combobox.place(x=50,y=230)
-                add_cardio_button.place(x=80,y=250)
+                cardio_combobox.place(x=300,y=285)
+                add_cardio_button.place(x=300+add_cardio_button.winfo_reqwidth(),y=310)
 
 
             def add_exercise_to_list():
                 selection = exercise_combobox.get()
                 exercise_combobox.set('')
                 exercise_list.append(selection)
-                print(exercise_list)
                 exercise_combobox['values'] = [value for value in exercise_combobox["values"] if value != selection]
+                part = body_combobox.get()
+                part_list.append(part)
 
 
             def add_cardio_to_list():
                 selection = cardio_combobox.get()
                 cardio_combobox.set('')
                 cardio_list.append(selection)
-                print(cardio_list)
                 cardio_combobox['values'] = [value for value in cardio_combobox['values'] if value != selection]
 
-            def generate_custom_workout():
+
+            def generate_custom_workout(name):
 
                 res = {'Weight_Training': exercise_list, 
                         'Cardio': cardio_list}
+
 
                 wt = exercise_list
                 wt_str = '\n'.join(wt)
@@ -279,31 +281,35 @@ class Trainer:
                 moto_label = tk.Label(root,text='Break Your Limits!',font=('Papyrus',12),background='Black',fg='White')
                 moto_label.place(x=(int(700-moto_label.winfo_reqwidth())/2),y=45)
 
+                #greet label
+                greet_label = tk.Label(root,text=f"Hi Trainers,\n Workout generated for member : {name}",font=('Denmark',12),background='Black',fg='White')
+                greet_label.place(x=int((700-greet_label.winfo_reqwidth())/2),y=80)
 
                 #weight training label
                 wt_label =tk.Label(root,text=f"Weight Training : ",background='Black',fg='White',font=10,justify='left')
-                wt_label.place(x=150,y=150)
+                wt_label.place(x=150,y=130)
                 wt2_label =tk.Label(root,text=wt_str,background='Black',fg='White',font=10,justify='left')
-                wt2_label.place(x=300,y=150)
+                wt2_label.place(x=300,y=130)
 
                 #Cardio Label
                 if cardio:
                     cd = '\n'.join(cardio)
-                    cd_label =tk.Label(root,text=f"cardio: ",background='Black',fg='White',font=10,justify='left')
-                    cd_label.place(x=180,y=310)
+                    cd_label =tk.Label(root,text=f"Cardio: ",background='Black',fg='White',font=10,justify='left')
+                    cd_label.place(x=180,y=140+wt2_label.winfo_reqheight())
                     cd_label_2 =tk.Label(root,text=cd,background='Black',fg='White',font=10,justify='left')
-                    cd_label_2.place(x=300,y=310)
+                    cd_label_2.place(x=300,y=140+wt2_label.winfo_reqheight())
 
                 #print button
-                print_button = tk.Button(root,text='Print Workout',font=('Denmark',10),background='Black',fg='White',command=lambda: Features.print_doc(result_dict=res,name=None,part=None))
+                print_button = tk.Button(root,text='Print Workout',font=('Denmark',10),background='Black',fg='White',command=lambda: Features.print_doc(result_dict=res,name=member_id_entry.get(),part=Features.format_part_list(part_list=part_list)))
                 print_button.place(x=550,y=350)
 
-
-
+                #back button
+                back_button = tk.Button(root,text='Back',font=('denmark',10),background='Black',fg='White',command=lambda:[custom_workout(),Features.delete_widget([back_button])])
+                back_button.place(x=50,y=50)
 
 
             #lists to hold exercise and cardio
-            exercise_list,cardio_list = [],[]
+            exercise_list,cardio_list,part_list = [],[],[]
 
             #Home Image
             path = r'C:\Users\Dell\Desktop\Project\Personal_Trainer\gallery\home.png'
@@ -321,66 +327,70 @@ class Trainer:
             moto_label.place(x=(int(700-moto_label.winfo_reqwidth())/2),y=45)
 
             #member_id label
-            member_id_label = tk.Label(root,text='Member ID',font=("Denmark",10),bg='Black',fg='White')
-            member_id_label.place(x=50,y=50)
+            member_id_label = tk.Label(root,text='Member Name',font=("Denmark",10),bg='Black',fg='White')
+            member_id_label.place(x=225,y=80)
 
             #member_id entry
             member_id_entry = tk.Entry(root,bg='#434343',fg='White')
-            member_id_entry.place(x=(60+member_id_label.winfo_reqwidth()),y=50)
+            member_id_entry.place(x=(235+member_id_label.winfo_reqwidth()),y=80)
 
             #weight_training label
             weight_training_label = tk.Label(root,text="Weight Training",font=('Denmark',12),background='Black',fg='White')
-            weight_training_label.place(x=50,y=(60+member_id_label.winfo_reqheight()))
+            weight_training_label.place(x=150,y=(90+member_id_label.winfo_reqheight()))
 
             #body_part label
             body_part_label = tk.Label(root,text="Body Part :",font=('Denmark',10),background='Black',fg='White')
-            body_part_label.place(x=50,y=120)
+            body_part_label.place(x=225,y=150)
 
             #body_part combobox
             body_combobox = ttk.Combobox(root)
-            body_combobox.place(x=60+body_part_label.winfo_reqwidth(),y=120)
+            body_combobox.place(x=235+body_part_label.winfo_reqwidth(),y=150)
             body_combobox['values'] = ('Chest','Back','Shoulders','Biceps','Triceps','Legs')
 
             body_combobox.bind('<<ComboboxSelected>>',lambda event: exercises(body_combobox.get()))
 
             #exercise label
             exercise_label = tk.Label(root,text="Exericses :",font=('Denmark',10),background='Black',fg='White')
-            exercise_label.place(x=50,y=150)
+            exercise_label.place(x=225,y=180)
 
             #exercise_combobox
             exercise_combobox = ttk.Combobox(root)
             exercise_combobox.set('Select Body Part')
-            exercise_combobox.place(x=60+exercise_label.winfo_reqwidth(),y=150)
+            exercise_combobox.place(x=235+exercise_label.winfo_reqwidth(),y=180)
 
             #add to list button
             add_button = tk.Button(root,text='Add to List',font=('Denmark',10),background='Black',fg='White',command=add_exercise_to_list)
-            add_button.place(x=60+exercise_label.winfo_reqwidth(),y=175)
+            add_button.place(x=300+exercise_label.winfo_reqwidth(),y=205)
 
             #cardio label
-            cardio_label = tk.Label(root,text='Cardio :',font=('Denmark',10),background='Black',fg='White')
-            cardio_label.place(x=50,y=205)
+            cardio_label = tk.Label(root,text='Cardio :',font=('Denmark',12),background='Black',fg='White')
+            cardio_label.place(x=170,y=235)
 
             #cardio combobox
             cardio_combobox = ttk.Combobox(root)
+
+            #add cardio button
+            add_cardio_button = tk.Button(root,text="Add to list",font=("Denmark",10),background="Black",fg="White",command=add_cardio_to_list)
 
             #cardio radio button
             check_cardio = tk.IntVar()
             check_cardio.set(1)
             cardio_radio = tk.Radiobutton(root,text='Yes',variable=check_cardio,value=1,background='Black',fg='#3498DB',command=lambda:cardio(cardio_combobox))
-            cardio_radio.place(x=70+cardio_label.winfo_reqwidth(),y=205)
-            cardio_radio = tk.Radiobutton(root,text='No',variable=check_cardio,value=0,background='Black',fg='#E74C3C',command=lambda:Features.delete_widget([cardio_combobox]))
-            cardio_radio.place(x=120+cardio_label.winfo_reqwidth(),y=205)
-
-            #add cardio button
-            add_cardio_button = tk.Button(root,text="Add to list",font=("Denmark",10),background="Black",fg="White",command=add_cardio_to_list)
-
+            cardio_radio.place(x=250+cardio_label.winfo_reqwidth(),y=255)
+            cardio_radio_2 = tk.Radiobutton(root,text='No',variable=check_cardio,value=0,background='Black',fg='#E74C3C',command=lambda:Features.delete_widget([cardio_combobox,add_cardio_button]))
+            cardio_radio_2.place(x=300+cardio_label.winfo_reqwidth(),y=255)
 
             #generate_custom_workout button
-            generate_custom_workout_button = tk.Button(root,text="Generate Workout",font=('Denmark',10),background='Black',fg='White',command=generate_custom_workout)
-            generate_custom_workout_button.place(x=50,y=300)
+            generate_custom_workout_button = tk.Button(root,text="Generate Workout",font=('Denmark',10),background='Black',fg='White',command=lambda:generate_custom_workout(member_id_entry.get()))
+            generate_custom_workout_button.place(x=530,y=340)
+
+            #back button
+            back_button = tk.Button(root,text='Back',font=('denmark',10),background='Black',fg='White',command=lambda:[trainer_home(),Features.delete_widget([back_button,member_id_entry,member_id_label,generate_custom_workout_button,cardio_radio,exercise_combobox,exercise_label,body_combobox,body_part_label,weight_training_label,add_cardio_button,cardio_combobox,cardio_label,add_button,cardio_radio_2])])
+            back_button.place(x=50,y=50)           
 
 
         def trainer_home():
+            frame.destroy()
             #Generate workout button
             workout_button = tk.Button(root,text="Generate Workout",font=('Denmark',15),background='Black',fg='White',command= lambda:[custom_workout(),Features.delete_widget([workout_button])])
             workout_button.place(x=int(700/4-workout_button.winfo_reqwidth()/2),y=200)
@@ -396,6 +406,7 @@ class Trainer:
                 frame.destroy()
                 new_frame = tk.Frame(root)
                 new_frame.pack(side='top',expand=True,fill='both')
+
                 path = r'C:\Users\Dell\Desktop\Project\Personal_Trainer\gallery\display.jpg'
                 img = ImageTk.PhotoImage(Image.open(path))
                 panel = tk.Label(root,image=img)

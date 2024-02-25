@@ -153,3 +153,15 @@ class Features:
     def delete_widget(widget_list):
         for widget in widget_list:
             widget.place_forget()
+    
+
+    def format_part_list(part_list):
+        new_list = list(set(part_list)) #remove duplicates
+        new_list.insert(-1,'and')
+        if len(new_list) == 2:
+            res = new_list[-1]
+        else:
+            fi = ', '.join(new_list[:-2])
+            res = fi+' '+' '.join(new_list[-2:])
+        
+        return res
