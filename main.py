@@ -80,60 +80,18 @@ class WorkoutPlan(weight_training):
         return workout,part
 
 
-class TG:
-    def home(root):
-        #Home Image
-        path = r'gallery\home.png'
-        img = ImageTk.PhotoImage(Image.open(path))
-        panel = tk.Label(root,image=img)
-        panel.image = img
-        panel.place(relheight=1,relwidth=1)
-
-        #Gym Label
-        gym_label = tk.Label(root,text='IRON  FITNESS  GYM',font=('Papyrus',18),background='Black',fg='White')
-        gym_label.place(x=(int(700-gym_label.winfo_reqwidth())/2))
-
-        #gym moto label
-        moto_label = tk.Label(root,text='Break Your Limits!',font=('Papyrus',12),background='Black',fg='White')
-        moto_label.place(x=(int(700-moto_label.winfo_reqwidth())/2),y=45)
-
-    def display(root):
-        #display Image
-        path = r'gallery\display.jpg'
-        img = ImageTk.PhotoImage(Image.open(path))
-        panel = tk.Label(root,image=img)
-        panel.image = img
-        panel.place(relheight=1,relwidth=1)
-
-        #Gym Label
-        gym_label = tk.Label(root,text='IRON  FITNESS  GYM',font=('Papyrus',18),background='Black',fg='White')
-        gym_label.place(x=(int(700-gym_label.winfo_reqwidth())/2))
-
-        #gym moto label
-        moto_label = tk.Label(root,text='Break Your Limits!',font=('Papyrus',12),background='Black',fg='White')
-        moto_label.place(x=(int(700-moto_label.winfo_reqwidth())/2),y=45)
-
-
 class Members:
     def main(root):
         def custom_workout(data):
             def exercises(part): 
                 #instead of this we can have a sql table in a db
                 exercise_combobox.set('')
-                exer_dict = {"Chest" : (x for x in range(1,13)),
-                            "Back" : ("Cable Lat Pull Down - Front","Cable Lat Pull Down - Back","Seated Cable Machine Rows","Cable Close Grip Pull Down","Machine Lat Pull Down","Machine Rows","Single Hand DB Rows","DB DeadLift","Bend over bar Rows","T-bar Rows","Cable Pullovers","Conventional Deadlifts"),
-                            "Shoulders" : ("Snatch and press rod"," Front raise rod"," Lateral raise rod","Rear delts rod","Db Parallel grip front raise (Hold one hand)","DB Lateral raises (hold one)","DB rear delts","Arnold Press","Straight press","Standing rear delta + upright","Arnold","Shrugs"),
-                            "Biceps" : ("Wide-Grip Cable Bicep Curls - EZ ROD","Close-Grip Cable Bicep Curls -EZ ROD","Cable Biceps Curls - Flat Rod","Cable Reverse Curls - Rod","Hanging Curls","Twisted Curls","Hammer Curls","Concentration Curls","Wide-Grip Rod Bicep Curls","Close-Grip Rod Bicep Curls","Mid-Grip rod Biceps Curls","Rod Reverse Curls"),
-                            "Triceps" : (x for x in range(1,13)),
-                            "Legs" : ("Squats","Ez bar lunges"," Wall sit"," Hamstring deadlift","DB Squats","DB chair Climb","DB hamstring deadlift","Calves","Leg press","Lunges dumbbell walking","Extension","Curls")
-                            }
-
-                exercise_combobox['values'] = exer_dict.get(part)
+                exercise_combobox['values'] = exercise_list_factory.get_exercise_list(part)
 
 
             def cardio(cardio_combobox):
                 cardio_combobox.set('')
-                cardio_combobox['values'] = ("WALK","Cross Trainer","Cycle","Mountain Climbs","Burpees","High Knees","Walk+Run","Crunch","Leg Raises","Plank")
+                cardio_combobox['values'] = exercise_list_factory.get_exercise_list("Cardio")
                 cardio_combobox.place(x=300,y=285)
                 add_cardio_button.place(x=300+add_cardio_button.winfo_reqwidth(),y=310)
 
@@ -168,20 +126,8 @@ class Members:
                 frame_3 = tk.Frame()
                 frame_3.pack(side='top',expand=True,fill='both')
 
-                #dispay image
-                path = r"gallery\display.jpg"
-                img = ImageTk.PhotoImage(Image.open(path))
-                panel = tk.Label(root,image=img)
-                panel.image = img
-                panel.place(relheight=1,relwidth=1)
-
-                #Gym Label
-                gym_label = tk.Label(root,text='IRON  FITNESS  GYM',font=('Papyrus',18),background='Black',fg='White')
-                gym_label.place(x=(int(700-gym_label.winfo_reqwidth())/2))
-
-                #gym moto label
-                moto_label = tk.Label(root,text='Break Your Limits!',font=('Papyrus',12),background='Black',fg='White')
-                moto_label.place(x=(int(700-moto_label.winfo_reqwidth())/2),y=45)
+                #background image,gym name and gym moto
+                tkinter_templates.display(root)
 
                 #greet label
                 greet_label = tk.Label(root,text=f"Hi Trainers,\n Workout generated for member : {name}",font=('Denmark',12),background='Black',fg='White')
@@ -213,20 +159,8 @@ class Members:
             #lists to hold exercise and cardio
             exercise_list,cardio_list,part_list = [],[],[]
 
-            #Home Image
-            path = r'gallery\home.png'
-            img = ImageTk.PhotoImage(Image.open(path))
-            panel = tk.Label(root,image=img)
-            panel.image = img
-            panel.place(relheight=1,relwidth=1)
-
-            #Gym Label
-            gym_label = tk.Label(root,text='IRON  FITNESS  GYM',font=('Papyrus',18),background='Black',fg='White')
-            gym_label.place(x=(int(700-gym_label.winfo_reqwidth())/2))
-
-            #gym moto label
-            moto_label = tk.Label(root,text='Break Your Limits!',font=('Papyrus',12),background='Black',fg='White')
-            moto_label.place(x=(int(700-moto_label.winfo_reqwidth())/2),y=45)
+            #background image,gym name and gym moto
+            tkinter_templates.home(root)
 
             #member_id label
             member_id_label = tk.Label(root,text='Member Name',font=("Denmark",10),bg='Black',fg='White')
@@ -291,26 +225,13 @@ class Members:
             back_button.place(x=50,y=50)
 
 
-
         def workout_history(id_num,data):
             #Creating a Frame
             frame = tk.Frame(root)
             frame.pack(side='top',expand=True,fill='both')
 
-            #background Image
-            path = r'gallery\display.jpg'
-            img = ImageTk.PhotoImage(Image.open(path))
-            panel = tk.Label(root,image=img)
-            panel.image = img
-            panel.place(relheight=1,relwidth=1)
-
-            #Gym Label
-            gym_label = tk.Label(root,text='IRON  FITNESS  GYM',font=('Papyrus',18),background='Black',fg='White')
-            gym_label.place(x=(int(700-gym_label.winfo_reqwidth())/2))
-
-            #gym moto label
-            moto_label = tk.Label(root,text='Break Your Limits!',font=('Papyrus',12),background='Black',fg='White')
-            moto_label.place(x=(int(700-moto_label.winfo_reqwidth())/2),y=45)
+            #background image,gym name and gym moto
+            tkinter_templates.display(root)
 
             #workout history
             history = Features.get_history(id_num=id_num)
@@ -329,7 +250,8 @@ class Members:
             mframe_2 = tk.Frame(root)
             mframe_2.pack(side='top',expand=True,fill='both')
 
-            TG.display(root)
+            #background image,gym name and gym moto
+            tkinter_templates.display(root)
 
             #greet Button
             part_dict = {'1':'Chest-Triceps','2':'Back-Biceps','3':'Shoulders-Legs'}
@@ -372,7 +294,8 @@ class Members:
             mframe_1 = tk.Frame(root)
             mframe_1.pack(side='top',expand=True,fill='both')
 
-            TG.home(root=root)
+            #background image,gym name and gym moto
+            tkinter_templates.home(root=root)
 
             #greet Button
             part_dict = {'1':'Chest-Triceps','2':'Back-Biceps','3':'Shoulders-Legs'}
@@ -403,16 +326,16 @@ class Members:
             custom_workout_button.place(x=int(700/4-custom_workout_button.winfo_reqwidth()/2),y=270)
 
 
-        def get_input(panel):
+        def get_input():
             member_id = myentry.get()
             if member_id:
-                path = r'gallery\display.jpg'
-                img = ImageTk.PhotoImage(Image.open(path))
-                panel.configure(image=img)
-                panel.image = img
-                member_details = member_data.get_member_details(id_num=member_id)
-                member_home(member_details)
-
+                try:
+                    member_details = member_data.get_member_details(id_num=member_id)
+                except:
+                    wrong_id_label = tk.Label(root,text="Incorrect Member ID. Try Again",font=('Arial',10),background='Black',fg='Red')
+                    wrong_id_label.place(x=int((700-wrong_id_label.winfo_reqwidth())/2),y=150)
+                else:
+                    member_home(member_details)
 
         #Home Image
         path = r'gallery\home.png'
@@ -442,31 +365,21 @@ class Members:
         back_button.place(x=50,y=50)
 
         #Login Button
-        login_button = tk.Button(root,text="Login",font=('Denmark',10),background='Black',fg='White',command=lambda : [get_input(panel),Features.delete_widget([login_button,back_button,entry_label,myentry])])
+        login_button = tk.Button(root,text="Login",font=('Denmark',10),background='Black',fg='White',command=lambda : [get_input()])
         login_button.place(x=int((700-login_button.winfo_reqwidth())/2),y=125)
-
 
 
 class Trainer:
     def main(root):
         def custom_workout():
             def exercises(part): 
-                #instead of this we can have a sql table in a db
                 exercise_combobox.set('')
-                exer_dict = {"Chest" : (x for x in range(1,13)),
-                            "Back" : ("Cable Lat Pull Down - Front","Cable Lat Pull Down - Back","Seated Cable Machine Rows","Cable Close Grip Pull Down","Machine Lat Pull Down","Machine Rows","Single Hand DB Rows","DB DeadLift","Bend over bar Rows","T-bar Rows","Cable Pullovers","Conventional Deadlifts"),
-                            "Shoulders" : ("Snatch and press rod"," Front raise rod"," Lateral raise rod","Rear delts rod","Db Parallel grip front raise (Hold one hand)","DB Lateral raises (hold one)","DB rear delts","Arnold Press","Straight press","Standing rear delta + upright","Arnold","Shrugs"),
-                            "Biceps" : ("Wide-Grip Cable Bicep Curls - EZ ROD","Close-Grip Cable Bicep Curls -EZ ROD","Cable Biceps Curls - Flat Rod","Cable Reverse Curls - Rod","Hanging Curls","Twisted Curls","Hammer Curls","Concentration Curls","Wide-Grip Rod Bicep Curls","Close-Grip Rod Bicep Curls","Mid-Grip rod Biceps Curls","Rod Reverse Curls"),
-                            "Triceps" : (x for x in range(1,13)),
-                            "Legs" : ("Squats","Ez bar lunges"," Wall sit"," Hamstring deadlift","DB Squats","DB chair Climb","DB hamstring deadlift","Calves","Leg press","Lunges dumbbell walking","Extension","Curls")
-                            }
-
-                exercise_combobox['values'] = exer_dict.get(part)
+                exercise_combobox['values'] = exercise_list_factory.get_exercise_list(part)
 
 
             def cardio(cardio_combobox):
                 cardio_combobox.set('')
-                cardio_combobox['values'] = ("WALK","Cross Trainer","Cycle","Mountain Climbs","Burpees","High Knees","Walk+Run","Crunch","Leg Raises","Plank")
+                cardio_combobox['values'] = exercise_list_factory.get_exercise_list("Cardio")
                 cardio_combobox.place(x=300,y=285)
                 add_cardio_button.place(x=300+add_cardio_button.winfo_reqwidth(),y=310)
 
@@ -501,20 +414,8 @@ class Trainer:
                 frame_3 = tk.Frame()
                 frame_3.pack(side='top',expand=True,fill='both')
 
-                #dispay image
-                path = r"gallery\display.jpg"
-                img = ImageTk.PhotoImage(Image.open(path))
-                panel = tk.Label(root,image=img)
-                panel.image = img
-                panel.place(relheight=1,relwidth=1)
-
-                #Gym Label
-                gym_label = tk.Label(root,text='IRON  FITNESS  GYM',font=('Papyrus',18),background='Black',fg='White')
-                gym_label.place(x=(int(700-gym_label.winfo_reqwidth())/2))
-
-                #gym moto label
-                moto_label = tk.Label(root,text='Break Your Limits!',font=('Papyrus',12),background='Black',fg='White')
-                moto_label.place(x=(int(700-moto_label.winfo_reqwidth())/2),y=45)
+                #background image,gym name and gym moto
+                tkinter_templates.display(root)
 
                 #greet label
                 greet_label = tk.Label(root,text=f"Hi Trainers,\n Workout generated for member : {name}",font=('Denmark',12),background='Black',fg='White')
@@ -546,20 +447,8 @@ class Trainer:
             #lists to hold exercise and cardio
             exercise_list,cardio_list,part_list = [],[],[]
 
-            #Home Image
-            path = r'gallery\home.png'
-            img = ImageTk.PhotoImage(Image.open(path))
-            panel = tk.Label(root,image=img)
-            panel.image = img
-            panel.place(relheight=1,relwidth=1)
-
-            #Gym Label
-            gym_label = tk.Label(root,text='IRON  FITNESS  GYM',font=('Papyrus',18),background='Black',fg='White')
-            gym_label.place(x=(int(700-gym_label.winfo_reqwidth())/2))
-
-            #gym moto label
-            moto_label = tk.Label(root,text='Break Your Limits!',font=('Papyrus',12),background='Black',fg='White')
-            moto_label.place(x=(int(700-moto_label.winfo_reqwidth())/2),y=45)
+            #background image,gym name and gym moto
+            tkinter_templates.home(root)
 
             #member_id label
             member_id_label = tk.Label(root,text='Member Name',font=("Denmark",10),bg='Black',fg='White')
@@ -634,20 +523,8 @@ class Trainer:
                 frame_5 = tk.Frame(root)
                 frame_5.pack(side='top',expand=True,fill='both')
 
-                #Home Image
-                path = r'gallery\display.jpg'
-                img = ImageTk.PhotoImage(Image.open(path))
-                panel = tk.Label(root,image=img)
-                panel.image = img
-                panel.place(relheight=1,relwidth=1)
-
-                #Gym Label
-                gym_label = tk.Label(root,text='IRON  FITNESS  GYM',font=('Papyrus',18),background='Black',fg='White')
-                gym_label.place(x=(int(700-gym_label.winfo_reqwidth())/2))
-
-                #gym moto label
-                moto_label = tk.Label(root,text='Break Your Limits!',font=('Papyrus',12),background='Black',fg='White')
-                moto_label.place(x=(int(700-moto_label.winfo_reqwidth())/2),y=45)
+                #background image,gym name and gym moto
+                tkinter_templates.display(root)
 
                 #confirmation_label
                 confirm_label = tk.Label(root,text='Member added Successfully',font=('Denmark',14),background='Black',fg='White')
@@ -665,20 +542,8 @@ class Trainer:
             frame_4 = tk.Frame(root)
             frame_4.pack(side='top',expand=True,fill='both')
 
-            #Home Image
-            path = r'gallery\display.jpg'
-            img = ImageTk.PhotoImage(Image.open(path))
-            panel = tk.Label(root,image=img)
-            panel.image = img
-            panel.place(relheight=1,relwidth=1)
-
-            #Gym Label
-            gym_label = tk.Label(root,text='IRON  FITNESS  GYM',font=('Papyrus',18),background='Black',fg='White')
-            gym_label.place(x=(int(700-gym_label.winfo_reqwidth())/2))
-
-            #gym moto label
-            moto_label = tk.Label(root,text='Break Your Limits!',font=('Papyrus',12),background='Black',fg='White')
-            moto_label.place(x=(int(700-moto_label.winfo_reqwidth())/2),y=45)
+            #background image,gym name and gym moto
+            tkinter_templates.display(root)
 
             #member_id label
             data = member_data.get_all_members()
@@ -743,7 +608,7 @@ class Trainer:
             frame_6.pack(side='top',expand=True,fill='both')
 
             #background image,gym name and gym moto
-            TG.display(root=root)
+            tkinter_templates.display(root=root)
 
             members_data = member_data.get_all_members()
             key = ('ID ','Name','Age','Cardio','Batch','Day')
@@ -758,28 +623,14 @@ class Trainer:
             back_button = tk.Button(root,text='Back',font=('denmark',10),background='Black',fg='White',command=lambda:[trainer_home(),frame_6.destroy()])
             back_button.place(x=50,y=50)                
 
-            
-
 
         def trainer_home():
             #trainer home frame
             frame_t = tk.Frame(root)
             frame_t.pack(side='top',expand=True,fill='both')
 
-            #Home Image
-            path = r'gallery\home.png'
-            img = ImageTk.PhotoImage(Image.open(path))
-            panel = tk.Label(root,image=img)
-            panel.image = img
-            panel.place(relheight=1,relwidth=1)
-
-            #Gym Label
-            gym_label = tk.Label(root,text='IRON  FITNESS  GYM',font=('Papyrus',18),background='Black',fg='White')
-            gym_label.place(x=(int(700-gym_label.winfo_reqwidth())/2))
-
-            #gym moto label
-            moto_label = tk.Label(root,text='Break Your Limits!',font=('Papyrus',12),background='Black',fg='White')
-            moto_label.place(x=(int(700-moto_label.winfo_reqwidth())/2),y=45)
+            #background image,gym name and gym moto
+            tkinter_templates.home(root)
 
             #Generate workout button
             workout_button = tk.Button(root,text="Generate Workout",font=('Denmark',15),background='Black',fg='White',command= lambda:[custom_workout(),frame_t.destroy()])
@@ -798,26 +649,16 @@ class Trainer:
             logout_button.place(x=600,y=350)
 
 
-        def get_input(panel):
+        def get_input():
             password = myentry.get()
             if password == 'A':
                 frame.destroy()
                 frame_2 = tk.Frame(root)
                 frame_2.pack(side='top',expand=True,fill='both')
 
-                path = r'gallery\home.png'
-                img = ImageTk.PhotoImage(Image.open(path))
-                panel = tk.Label(root,image=img)
-                panel.image = img
-                panel.place(relheight=1,relwidth=1)
+                #background image,gym label and gym moto
+                tkinter_templates.home(root)
 
-                #Gym Label
-                gym_label = tk.Label(root,text='IRON  FITNESS  GYM',font=('Papyrus',18),background='Black',fg='White')
-                gym_label.place(x=(int(700-gym_label.winfo_reqwidth())/2))
-
-                #gym moto label
-                moto_label = tk.Label(root,text='Break Your Limits!',font=('Papyrus',12),background='Black',fg='White')
-                moto_label.place(x=(int(700-moto_label.winfo_reqwidth())/2),y=45)
                 frame_2.destroy()
                 trainer_home()
             else:
@@ -830,20 +671,8 @@ class Trainer:
         frame = tk.Frame(root)
         frame.pack(side='top',expand=True,fill='both')
 
-        #Home Image
-        path = r'gallery\home.png'
-        img = ImageTk.PhotoImage(Image.open(path))
-        panel = tk.Label(root,image=img)
-        panel.image = img
-        panel.place(relheight=1,relwidth=1)
-
-        #Gym Label
-        gym_label = tk.Label(root,text='IRON  FITNESS  GYM',font=('Papyrus',18),background='Black',fg='White')
-        gym_label.place(x=(int(700-gym_label.winfo_reqwidth())/2))
-
-        #gym moto label
-        moto_label = tk.Label(root,text='Break Your Limits!',font=('Papyrus',12),background='Black',fg='White')
-        moto_label.place(x=(int(700-moto_label.winfo_reqwidth())/2),y=45)
+        #background image,gym label and gym moto
+        tkinter_templates.home(root)
 
         #Member_id entry
         myentry = tk.Entry(root,show='*',bg='#434343',fg='White')
@@ -858,25 +687,13 @@ class Trainer:
         back_button.place(x=50,y=50)
 
         #Login Button
-        button = tk.Button(root,text="Login",font=('Denmark',10),background='Black',fg='White',command=lambda : get_input(panel))
+        button = tk.Button(root,text="Login",font=('Denmark',10),background='Black',fg='White',command=lambda : get_input())
         button.place(x=int((700-button.winfo_reqwidth())/2),y=125)
 
 
 def home(root):
-    #Home Screen
-    path = r'gallery\home.png'
-    img = ImageTk.PhotoImage(Image.open(path))
-    panel = tk.Label(root,image=img)
-    panel.image = img
-    panel.place(relheight=1,relwidth=1)
-    
-    #Gym Label
-    gym_label = tk.Label(root,text='IRON  FITNESS  GYM',font=('Papyrus',18),background='Black',fg='White')
-    gym_label.place(x=(int(700-gym_label.winfo_reqwidth())/2))
-
-    #gym moto label
-    moto_label = tk.Label(root,text='Break Your Limits!',font=('Papyrus',12),background='Black',fg='White')
-    moto_label.place(x=(int(700-moto_label.winfo_reqwidth())/2),y=45)
+    #background image,gym name and gym moto
+    tkinter_templates.home(root)
 
     #Member Login
     button = tk.Button(root,text="Member Login",font=('Denmark',13),background='Black',fg='White',command=lambda : Members.main(root))

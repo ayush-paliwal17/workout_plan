@@ -6,6 +6,9 @@ from docx.shared import Pt
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 import sqlite3
 from datetime import date
+import tkinter as tk
+from PIL import Image,ImageTk
+from abc import ABC,abstractmethod
 
 connnection = sqlite3.connect('gym_data.db') #connect to a local database, create a new one if it dosen't exist
 
@@ -15,10 +18,12 @@ class member_data:
 
     def create_table():
         cursor.execute("CREATE TABLE IF NOT EXISTS member_data(id_num PRIMARY KEY ,name,age,cardio,batch,day)")
+        # connnection.commit()
         print('Table Created')
 
 
     def add_member(member_details):
+        #order to be followed (id_num,name,age,cardio,batch,day)
         cursor.execute(f"INSERT INTO member_data VALUES {member_details}")
         connnection.commit()
 
@@ -40,7 +45,7 @@ class member_data:
                     }
             return member
         else:
-            print("Invalid Member ID")
+            raise(Exception)
 
 
     def get_all_members():
@@ -60,6 +65,16 @@ class member_data:
         """)
         connnection.commit()
 
+
+    def get_last_key():
+        cursor.execute(f"""
+            SELECT id_num from member_data
+        """)
+        result = cursor.fetchall()
+
+        return result
+
+
 class Workout:
     def get_weight_training(ex_id):
         cursor.execute(f"""
@@ -78,6 +93,7 @@ class Workout:
         result = cursor.fetchone()
         cardio = [x for x in result[1:]]
         return cardio
+
 
 class Features:
     def print_doc(result_dict,name,part):
@@ -165,3 +181,119 @@ class Features:
             res = fi+' '+' '.join(new_list[-2:])
         
         return res
+
+
+class tkinter_templates:
+    def home(root):
+        #Home Image
+        path = r'gallery\home.png'
+        img = ImageTk.PhotoImage(Image.open(path))
+        panel = tk.Label(root,image=img)
+        panel.image = img
+        panel.place(relheight=1,relwidth=1)
+
+        #Gym Label
+        gym_label = tk.Label(root,text='IRON  FITNESS  GYM',font=('Papyrus',18),background='Black',fg='White')
+        gym_label.place(x=(int(700-gym_label.winfo_reqwidth())/2))
+
+        #gym moto label
+        moto_label = tk.Label(root,text='Break Your Limits!',font=('Papyrus',12),background='Black',fg='White')
+        moto_label.place(x=(int(700-moto_label.winfo_reqwidth())/2),y=45)
+
+    def display(root):
+        #display Image
+        path = r'gallery\display.jpg'
+        img = ImageTk.PhotoImage(Image.open(path))
+        panel = tk.Label(root,image=img)
+        panel.image = img
+        panel.place(relheight=1,relwidth=1)
+
+        #Gym Label
+        gym_label = tk.Label(root,text='IRON  FITNESS  GYM',font=('Papyrus',18),background='Black',fg='White')
+        gym_label.place(x=(int(700-gym_label.winfo_reqwidth())/2))
+
+        #gym moto label
+        moto_label = tk.Label(root,text='Break Your Limits!',font=('Papyrus',12),background='Black',fg='White')
+        moto_label.place(x=(int(700-moto_label.winfo_reqwidth())/2),y=45)
+
+
+class exercise_list_factory():
+    class body_part(ABC):
+        @abstractmethod
+        def get_exercise_list():
+            pass
+
+    class chest(body_part):
+        @staticmethod
+        def get_exercise_list():
+            cursor.execute("Select Exercise Name from Chest")
+            res = cursor.fetchall()
+            res = [x[0] for x in res]
+            return res
+
+    class back(body_part):
+        @staticmethod
+        def get_exercise_list():
+            cursor.execute("Select Exercise Name from Back")
+            res = cursor.fetchall()
+            res = [x[0] for x in res]
+            return res
+
+    class shoulder(body_part):
+        @staticmethod
+        def get_exercise_list():
+            cursor.execute("Select Exercise Name from Shoulders")
+            res = cursor.fetchall()
+            res = [x[0] for x in res]
+            return res
+
+    class biceps(body_part):
+        @staticmethod
+        def get_exercise_list():
+            cursor.execute("Select Exercise Name from Biceps")
+            res = cursor.fetchall()
+            res = [x[0] for x in res]
+            return res
+
+    class triceps(body_part):
+        @staticmethod
+        def get_exercise_list():
+            cursor.execute("Select Exercise Name from Triceps")
+            res = cursor.fetchall()
+            res = [x[0] for x in res]
+            return res
+
+    class legs(body_part):
+        @staticmethod
+        def get_exercise_list():
+            cursor.execute("Select Exercise Name from Legs")
+            res = cursor.fetchall()
+            res = [x[0] for x in res]
+            return res
+
+    class cardio(body_part):
+        @staticmethod
+        def get_exercise_list():
+            cursor.execute("Select Exercise Name from Cardio_list")
+            res = cursor.fetchall()
+            res = [x[0] for x in res]
+            return res
+
+    def part_factory(part):
+        part_dict = {
+            "Chest" : exercise_list_factory.chest(),
+            "Back" : exercise_list_factory.back(),
+            "Shoulders" : exercise_list_factory.shoulder(),
+            "Biceps" : exercise_list_factory.biceps(),
+            "Triceps" : exercise_list_factory.triceps(),
+            "Legs" : exercise_list_factory.legs(),
+            "Cardio" : exercise_list_factory.cardio()
+            }
+        return part_dict.get(part)
+
+    def get_exercise_list(part):
+        try:
+            part_obj = exercise_list_factory.part_factory(part)
+            return part_obj.get_exercise_list()
+        except Exception:
+            raise Exception("Unable to Create Object")
