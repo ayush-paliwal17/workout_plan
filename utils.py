@@ -141,19 +141,23 @@ class Features:
         doc.save(filename)
         os.startfile(filename)
 
+
     def add_history(id_num,workout):
 
+        #get date
         t_date = str(date.today())
 
+        #read workout history from the json file
         with open("workout_history.json") as f:
             fi_data = json.load(f)
 
 
         queue = fi_data[id_num]
         queue.append({t_date : workout})
-        if len(queue)>3:
+        if len(queue)>50: #limiting the history to 50 days
             queue.pop(0)
 
+        #writing to the json file
         fi_data[id_num] = queue        
         with open("workout_history.json",'w') as f:
             json.dump(fi_data,f)
@@ -202,7 +206,7 @@ class tkinter_templates:
 
     def display(root):
         #display Image
-        path = r'gallery\display.jpg'
+        path = r'gallery\display.png'
         img = ImageTk.PhotoImage(Image.open(path))
         panel = tk.Label(root,image=img)
         panel.image = img
@@ -217,7 +221,7 @@ class tkinter_templates:
         moto_label.place(x=(int(700-moto_label.winfo_reqwidth())/2),y=45)
 
 
-class exercise_list_factory():
+class exercise_list_factory:
     class body_part(ABC):
         @abstractmethod
         def get_exercise_list():

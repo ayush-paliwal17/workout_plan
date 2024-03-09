@@ -3,7 +3,7 @@ import tkinter as tk
 from tkinter import ttk
 from PIL import Image,ImageTk
 from tabulate import tabulate
-
+from tkcalendar import DateEntry
 
 class weight_training:
     def circuit(self,member_details):
@@ -226,22 +226,62 @@ class Members:
 
 
         def workout_history(id_num,data):
-            #Creating a Frame
-            frame = tk.Frame(root)
-            frame.pack(side='top',expand=True,fill='both')
+            def display_workout_history():
+                dt = calendar.get_date()
 
-            #background image,gym name and gym moto
+                history_frame_2 = tk.Frame(root)
+                history_frame_2.pack(side='top',expand=True,fill='both')
+
+                tkinter_templates.display(root=root)
+
+                greet_label = tk.Label(root,text=f'Workout History for date : {dt}',font=('Denmark',15),background='Black',fg='White')
+                greet_label.place(x=int((700-greet_label.winfo_reqwidth())/2),y=90)
+
+                history = Features.get_history(id_num=id_num)
+                res = (history[0].get(f'{dt}'))
+
+                wt = res.get('Weight_Training')
+                wt_str = '\n'.join(wt)
+                cardio = res.get('Cardio')
+
+                #weight training label
+                wt_label =tk.Label(root,text=f"Weight Training : ",background='Black',fg='White',font=10,justify='left')
+                wt_label.place(x=150,y=150)
+                wt2_label =tk.Label(root,text=wt_str,background='Black',fg='White',font=10,justify='left')
+                wt2_label.place(x=300,y=150)
+
+                #Cardio Label
+                if cardio:
+                    cd = '\n'.join(cardio)
+                    cd_label =tk.Label(root,text=f"cardio: ",background='Black',fg='White',font=10,justify='left')
+                    cd_label.place(x=180,y=310)
+                    cd_label_2 =tk.Label(root,text=cd,background='Black',fg='White',font=10,justify='left')
+                    cd_label_2.place(x=300,y=310)
+
+                #Back Button
+                back_button = tk.Button(root,text='Back',font=('Denmark',10),background='Black',fg='White',command=lambda:[workout_history(id_num,data),history_frame_2.destroy()])
+                back_button.place(x=50,y=50)
+
+
+            history_frame_1 = tk.Frame(root)
+            history_frame_1.pack(side='top',expand=True,fill='both')
+
             tkinter_templates.display(root)
 
-            #workout history
-            history = Features.get_history(id_num=id_num)
-            history = [str(x) for x in history]
-            final_history = "\n\n".join(history)
-            history_label = tk.Message(root,text=final_history,background='Black',fg='White',font=10,width=700)
-            history_label.place(x=0,y=100)
+            h_label = tk.Label(root,text="WORKOUT HISTORY",font=('Denmark',18),background='Black',fg='White')
+            h_label.place(x=int((700-h_label.winfo_reqwidth())/2),y=90)
+
+            sel_dt_label = tk.Label(root,text='Select Date : ',font=('Denmark',12),background='Black',fg='White')
+            sel_dt_label.place(x=240,y=175)
+
+            calendar = DateEntry(root,selectmode='day')
+            calendar.place(x=345,y=175)
+
+            check_button = tk.Button(root, text="Check History",font=('Denmark',16),background='Black',fg='White',command=lambda:[display_workout_history(),history_frame_1.destroy()])
+            check_button.place(x=int((700-check_button.winfo_reqwidth())/2),y=200)
 
             #back Button
-            back_button = tk.Button(root,text="Back",font=('Denmark',10),background='Black',fg='White',command=lambda : [member_home(data=data),Features.delete_widget([history_label,back_button])])
+            back_button = tk.Button(root,text="Back",font=('Denmark',10),background='Black',fg='White',command=lambda : [member_home(data=data),history_frame_1.destroy()])
             back_button.place(x=50,y=50)
 
 
