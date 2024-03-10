@@ -142,7 +142,7 @@ class Features:
         os.startfile(filename)
 
 
-    def add_history(id_num,workout):
+    def add_workout_to_DB(id_num,workout):
 
         #get date
         t_date = str(date.today())
@@ -151,10 +151,13 @@ class Features:
         with open("workout_history.json") as f:
             fi_data = json.load(f)
 
+        if fi_data.get(id_num):
+            queue = fi_data.get(id_num)
+        else:
+            queue = []
 
-        queue = fi_data[id_num]
         queue.append({t_date : workout})
-        if len(queue)>50: #limiting the history to 50 days
+        if len(queue)>30: #limiting the history to 30 unique entries
             queue.pop(0)
 
         #writing to the json file
@@ -163,11 +166,15 @@ class Features:
             json.dump(fi_data,f)
 
 
-    def get_history(id_num):
+    def get_history(id_num,dt):
         with open("workout_history.json") as f:
             fi_data = json.load(f)
         queue = fi_data[id_num]
-        return queue
+        workout = None
+        for history in queue:
+            if history.get(dt):
+                workout = history.get(dt)
+        return workout
     
 
     def delete_widget(widget_list):

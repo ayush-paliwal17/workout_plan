@@ -4,6 +4,7 @@ from tkinter import ttk
 from PIL import Image,ImageTk
 from tabulate import tabulate
 from tkcalendar import DateEntry
+import datetime
 
 class weight_training:
     def circuit(self,member_details):
@@ -117,6 +118,7 @@ class Members:
                 res = {'Weight_Training': exercise_list, 
                         'Cardio': cardio_list}
 
+                Features.add_workout_to_DB(id_num=data['id_num'],workout=res)
 
                 wt = exercise_list
                 wt_str = '\n'.join(wt)
@@ -130,7 +132,7 @@ class Members:
                 tkinter_templates.display(root)
 
                 #greet label
-                greet_label = tk.Label(root,text=f"Hi Trainers,\n Workout generated for member : {name}",font=('Denmark',12),background='Black',fg='White')
+                greet_label = tk.Label(root,text=f"Hi {name},\nCustom Workout generated",font=('Denmark',12),background='Black',fg='White')
                 greet_label.place(x=int((700-greet_label.winfo_reqwidth())/2),y=80)
 
                 #weight training label
@@ -229,6 +231,13 @@ class Members:
             def display_workout_history():
                 dt = calendar.get_date()
 
+                history = Features.get_history(id_num=id_num,dt=str(dt))
+
+                if not history:
+                    not_found_label = tk.Label(root,text=f"No History found for date : {dt}",font=('Denmark',14),background='Black',fg='Red')
+                    not_found_label.place(x=int((700-not_found_label.winfo_reqwidth())/2),y=240)
+                    return None
+
                 history_frame_2 = tk.Frame(root)
                 history_frame_2.pack(side='top',expand=True,fill='both')
 
@@ -237,12 +246,10 @@ class Members:
                 greet_label = tk.Label(root,text=f'Workout History for date : {dt}',font=('Denmark',15),background='Black',fg='White')
                 greet_label.place(x=int((700-greet_label.winfo_reqwidth())/2),y=90)
 
-                history = Features.get_history(id_num=id_num)
-                res = (history[0].get(f'{dt}'))
 
-                wt = res.get('Weight_Training')
+                wt = history.get('Weight_Training')
                 wt_str = '\n'.join(wt)
-                cardio = res.get('Cardio')
+                cardio = history.get('Cardio')
 
                 #weight training label
                 wt_label =tk.Label(root,text=f"Weight Training : ",background='Black',fg='White',font=10,justify='left')
@@ -274,7 +281,10 @@ class Members:
             sel_dt_label = tk.Label(root,text='Select Date : ',font=('Denmark',12),background='Black',fg='White')
             sel_dt_label.place(x=240,y=175)
 
-            calendar = DateEntry(root,selectmode='day')
+            max_date = datetime.date.today()
+            min_date = datetime.date.today()-datetime.timedelta(days=30)
+
+            calendar = DateEntry(root,selectmode='day',mindate=min_date,maxdate=max_date)
             calendar.place(x=345,y=175)
 
             check_button = tk.Button(root, text="Check History",font=('Denmark',16),background='Black',fg='White',command=lambda:[display_workout_history(),history_frame_1.destroy()])
@@ -301,6 +311,7 @@ class Members:
             member_data_label = tk.Message(root,text=final_data,font=('Denmark',13),background='Black',fg='White',width=700,justify='center')
             member_data_label.place(x=int((700-member_data_label.winfo_reqwidth())/2),y=110)
 
+            Features.add_workout_to_DB(id_num=data['id_num'],workout=res)
 
             wt = res['Weight_Training']
             wt_str = '\n'.join(wt)
