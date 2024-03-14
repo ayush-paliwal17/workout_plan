@@ -150,7 +150,7 @@ class Members:
                     cd_label_2.place(x=300,y=140+wt2_label.winfo_reqheight())
 
                 #print button
-                print_button = tk.Button(root,text='Print Workout',font=('Denmark',10),background='Black',fg='White',command=lambda: Features.print_doc(result_dict=res,name=member_id_entry.get(),part=Features.format_part_list(part_list=part_list)))
+                print_button = tk.Button(root,text='Print Workout',font=('Denmark',10),background='Black',fg='White',command=lambda: Features.print_doc(result_dict=res,name=data['Name'],part=Features.format_part_list(part_list=part_list)))
                 print_button.place(x=550,y=350)
 
                 #back button
@@ -165,16 +165,12 @@ class Members:
             tkinter_templates.home(root)
 
             #member_id label
-            member_id_label = tk.Label(root,text='Member Name',font=("Denmark",10),bg='Black',fg='White')
-            member_id_label.place(x=225,y=80)
-
-            #member_id entry
-            member_id_entry = tk.Entry(root,bg='#434343',fg='White')
-            member_id_entry.place(x=(235+member_id_label.winfo_reqwidth()),y=80)
+            member_name_label = tk.Label(root,text=f"Member Name : {data['Name']}",font=("Denmark",14),bg='Black',fg='White')
+            member_name_label.place(x=int((700-member_name_label.winfo_reqwidth())/2),y=80)
 
             #weight_training label
             weight_training_label = tk.Label(root,text="Weight Training",font=('Denmark',12),background='Black',fg='White')
-            weight_training_label.place(x=150,y=(90+member_id_label.winfo_reqheight()))
+            weight_training_label.place(x=150,y=(90+member_name_label.winfo_reqheight()))
 
             #body_part label
             body_part_label = tk.Label(root,text="Body Part :",font=('Denmark',10),background='Black',fg='White')
@@ -219,11 +215,11 @@ class Members:
             cardio_radio_2.place(x=300+cardio_label.winfo_reqwidth(),y=255)
 
             #generate_custom_workout button
-            generate_custom_workout_button = tk.Button(root,text="Generate Workout",font=('Denmark',10),background='Black',fg='White',command=lambda:generate_custom_workout(member_id_entry.get()))
+            generate_custom_workout_button = tk.Button(root,text="Generate Workout",font=('Denmark',10),background='Black',fg='White',command=lambda:generate_custom_workout(data['Name']))
             generate_custom_workout_button.place(x=530,y=340)
 
             #back button
-            back_button = tk.Button(root,text='Back',font=('denmark',10),background='Black',fg='White',command=lambda:[member_home(data=data),Features.delete_widget([back_button,member_id_entry,member_id_label,generate_custom_workout_button,cardio_radio,exercise_combobox,exercise_label,body_combobox,body_part_label,weight_training_label,add_cardio_button,cardio_combobox,cardio_label,add_button,cardio_radio_2])])
+            back_button = tk.Button(root,text='Back',font=('denmark',10),background='Black',fg='White',command=lambda:[member_home(data=data),Features.delete_widget([back_button,member_name_label,generate_custom_workout_button,cardio_radio,exercise_combobox,exercise_label,body_combobox,body_part_label,weight_training_label,add_cardio_button,cardio_combobox,cardio_label,add_button,cardio_radio_2])])
             back_button.place(x=50,y=50)
 
 
@@ -422,6 +418,56 @@ class Members:
 
 class Trainer:
     def main(root):
+        
+        def print_member_details(member_details):
+            new_member_id_label = tk.Label(root,text=f'Member ID : {member_details[0]}',font=("Denmark",12),bg='Black',fg='White')
+            new_member_id_label.place(x=95,y=110)
+
+            #name label
+            new_member_name_label = tk.Label(root,text=f"Member Name : {member_details[1]}",font=('Denmark',12),background='Black',fg='White')
+            new_member_name_label.place(x=25,y=160)
+
+            #DOB label
+            DOB_label = tk.Label(root,text=f"Date of Birth : {member_details[6]} ",font=('Denmark',12),background='Black',fg='White')
+            DOB_label.place(x=25,y=195)
+
+            #phone number label
+            ph_no_label = tk.Label(root,text=f'Phone Number : {member_details[8]}',font=('Denmark',12),background='Black',fg='White')
+            ph_no_label.place(x=25,y=230)
+
+            #address label
+            address_label = tk.Label(root,text=f'Address : {member_details[7]}',font=('Denamrk',12),background='Black',fg='White')
+            address_label.place(x=45,y=265)
+
+            #email label
+            email_label = tk.Label(root,text=f'E-mail ID : {member_details[9]}',font=('Denamrk',12),fg='White',background='Black')
+            email_label.place(x=45,y=300)
+
+            #gender label
+            gender_label = tk.Label(root,text=f"Gender : {member_details[5]} ",font=('Denmark',12),background='Black',fg='White')
+            gender_label.place(x=405,y=160)
+
+            #father's name label
+            father_name_label = tk.Label(root,text=f"Father's Name : {member_details[10]}",font=('Denamrk',12),background='Black',fg='White')
+            father_name_label.place(x=395,y=195)
+
+            #cardio label
+            new_member_cardio_label = tk.Label(root,text=f"Cardio : {member_details[2]} ",font=('Denmark',12),background='Black',fg='White')
+            new_member_cardio_label.place(x=405,y=230)
+
+            #batch label
+            new_member_batch_label = tk.Label(root,text=f"Batch : {member_details[3]} ",font=('Denmark',12),background='Black',fg='White')
+            new_member_batch_label.place(x=405,y=265)
+
+            #day label
+            new_member_day_label = tk.Label(root,text=f"Day : {member_details[4]} ",font=('Denmark',12),background='Black',fg='White')
+            new_member_day_label.place(x=405,y=300)
+
+            #renewal date label
+            renewal_date_label = tk.Label(root,text=f'Membership Upto : {member_details[11]} ',font=('Denmark',12),fg='White',background='Black')
+            renewal_date_label.place(x=305,y=110)
+
+
         def custom_workout():
             def exercises(part): 
                 exercise_combobox.set('')
@@ -565,9 +611,10 @@ class Trainer:
 
 
         def add_member():
+            #(id_num PRIMARY KEY,Name,Cardio,Batch,Day,Gender,DOB,Address,Phone_Number,e-mail,Father's Name,Membership Renewal Date)
             def add_mem():
                 #adding the member to the database
-                new_member_details = (new_id,member_name_entry.get(),member_age_entry.get(),cardio_combobox.get(),batch_combobox.get(),day_combobox.get())
+                new_member_details = (new_id,member_name_entry.get(),cardio_combobox.get(),batch_combobox.get(),day_combobox.get(),gender_entry.get(),str(DOB_entry.get_date()),address_entry.get(),ph_no_entry.get(),email_entry.get(),father_name_entry.get(),str(renewal_date_entry.get_date()))
                 member_data.add_member(new_member_details)
 
                 #new frame
@@ -581,9 +628,8 @@ class Trainer:
                 confirm_label = tk.Label(root,text='Member added Successfully',font=('Denmark',14),background='Black',fg='White')
                 confirm_label.place(x=int((700-confirm_label.winfo_reqwidth())/2),y=80)
 
-                #member_deatils_label
-                member_details_label = tk.Label(root,text=f' Member ID : {new_member_details[0]}\n Member Name : {new_member_details[1]}\n Member Age : {new_member_details[2]}\n Cardio: {new_member_details[3]} \n Batch : {new_member_details[4]}\n Day : {new_member_details[5]}',font=('Denmark',18),fg='White',background='Black',justify='left')
-                member_details_label.place(x=int((700-confirm_label.winfo_reqwidth())/2),y=120)
+                #printing member details
+                print_member_details(member_details=new_member_details)
 
                 #back button
                 back_button = tk.Button(root,text='Back',font=('denmark',10),background='Black',fg='White',command=lambda:[add_member(),frame_5.destroy()])
@@ -598,55 +644,104 @@ class Trainer:
 
             #member_id label
             data = member_data.get_all_members()
-            new_id = str(int(data[-1][0])+1)
-            new_member_id_label = tk.Label(root,text=f'Member id : {new_id}',font=("Denmark",15),bg='Black',fg='White')
-            new_member_id_label.place(x=int((700-new_member_id_label.winfo_reqwidth())/2),y=100)
+            if data:
+                new_id = str(int(data[-1][0])+1)
+            else:
+                new_id = '0'
+            new_member_id_label = tk.Label(root,text=f'Member ID : {new_id}',font=("Denmark",12),bg='Black',fg='White')
+            new_member_id_label.place(x=95,y=110)
 
-            #new_member_name label
+            #name label
             new_member_name_label = tk.Label(root,text="Member Name : ",font=('Denmark',12),background='Black',fg='White')
-            new_member_name_label.place(x=225,y=110+new_member_id_label.winfo_reqheight())
+            new_member_name_label.place(x=25,y=160)
 
             #member_name entry
             member_name_entry = tk.Entry(root,bg='#434343',fg='White')
-            member_name_entry.place(x=(235+new_member_name_label.winfo_reqwidth()),y=110+new_member_id_label.winfo_reqheight())
+            member_name_entry.place(x=(35+new_member_name_label.winfo_reqwidth()),y=160)
 
-            #new_member_age label
-            new_member_age_label = tk.Label(root,text="Member Age : ",font=('Denmark',12),background='Black',fg='White')
-            new_member_age_label.place(x=225,y=170)
+            #DOB label
+            DOB_label = tk.Label(root,text="Date of Birth : ",font=('Denmark',12),background='Black',fg='White')
+            DOB_label.place(x=25,y=195)
 
-            #member_name entry
-            member_age_entry = tk.Entry(root,bg='#434343',fg='White')
-            member_age_entry.place(x=(235+new_member_name_label.winfo_reqwidth()),y=170)
+            #DOB entry
+            DOB_entry = DateEntry(root,selectmode='day',year=2008)
+            DOB_entry.place(x=(35+new_member_name_label.winfo_reqwidth()),y=195)
 
+            #phone number label
+            ph_no_label = tk.Label(root,text='Phone Number : ',font=('Denmark',12),background='Black',fg='White')
+            ph_no_label.place(x=25,y=230)
 
-            #new_member_cardio label
+            #phone number entry
+            ph_no_entry = tk.Entry(root,background='White',fg='Black')
+            ph_no_entry.place(x=35+ph_no_label.winfo_reqwidth(),y=230)
+
+            #address label
+            address_label = tk.Label(root,text='Address : ',font=('Denamrk',12),background='Black',fg='White')
+            address_label.place(x=45,y=265)
+
+            #address entry
+            address_entry = tk.Entry(root,background='White',fg='Black')
+            address_entry.place(x=35+new_member_name_label.winfo_reqwidth(),y=265)
+
+            #email label
+            email_label = tk.Label(root,text='E-mail ID : ',font=('Denamrk',12),fg='White',background='Black')
+            email_label.place(x=45,y=300)
+
+            #email entry
+            email_entry = tk.Entry(root,background='White',fg='Black')
+            email_entry.place(x=35+new_member_name_label.winfo_reqwidth(),y=300)
+
+            #gender label
+            gender_label = tk.Label(root,text="Gender : ",font=('Denmark',12),background='Black',fg='White')
+            gender_label.place(x=405,y=160)
+
+            #gender entry
+            gender_entry = tk.Entry(root,fg='Black',background='White')
+            gender_entry.place(x=395+new_member_name_label.winfo_reqwidth(),y=160)
+
+            #father's name label
+            father_name_label = tk.Label(root,text="Father's Name : ",font=('Denamrk',12),background='Black',fg='White')
+            father_name_label.place(x=395,y=195)
+
+            #father's entry
+            father_name_entry = tk.Entry(root,fg='Black',background='White')
+            father_name_entry.place(x=395+new_member_name_label.winfo_reqwidth(),y=195)
+
+            #cardio label
             new_member_cardio_label = tk.Label(root,text="Cardio : ",font=('Denmark',12),background='Black',fg='White')
-            new_member_cardio_label.place(x=245,y=200)
+            new_member_cardio_label.place(x=405,y=230)
 
             #cardio_combobox entry
             cardio_combobox = ttk.Combobox(root,values=['Yes','No'])
-            cardio_combobox.place(x=235+new_member_name_label.winfo_reqwidth(),y=200)
+            cardio_combobox.place(x=395+new_member_name_label.winfo_reqwidth(),y=230)
 
-
-            #new_member_name label
+            #batch label
             new_member_batch_label = tk.Label(root,text="Batch : ",font=('Denmark',12),background='Black',fg='White')
-            new_member_batch_label.place(x=245,y=230)
+            new_member_batch_label.place(x=405,y=265)
 
-            #cardio_combobox entry
+            #batch_combobox entry
             batch_combobox = ttk.Combobox(root,values=['A','B','C'])
-            batch_combobox.place(x=235+new_member_name_label.winfo_reqwidth(),y=230)
+            batch_combobox.place(x=395+new_member_name_label.winfo_reqwidth(),y=265)
 
-            #new_member_day label
+            #day label
             new_member_day_label = tk.Label(root,text="Day : ",font=('Denmark',12),background='Black',fg='White')
-            new_member_day_label.place(x=245,y=260)
+            new_member_day_label.place(x=405,y=300)
 
-            #cardio_combobox entry
+            #day_combobox entry
             day_combobox = ttk.Combobox(root,values=['0','1','2','3'])
-            day_combobox.place(x=235+new_member_name_label.winfo_reqwidth(),y=260)
+            day_combobox.place(x=395+new_member_name_label.winfo_reqwidth(),y=300)
+
+            #renewal date label
+            renewal_date_label = tk.Label(root,text='Membership Upto : ',font=('Denmark',12),fg='White',background='Black')
+            renewal_date_label.place(x=305,y=110)
+
+            #renewal date entry
+            renewal_date_entry = DateEntry(root,selectmode='day')
+            renewal_date_entry.place(x=325+new_member_name_label.winfo_reqwidth(),y=110)
 
             # add button
             add_member_button = tk.Button(root,text='Add Member',background='Black',fg='White',command=lambda:[add_mem(),frame_4.destroy()])
-            add_member_button.place(x=600,y=300)
+            add_member_button.place(x=600,y=360)
 
             #back button
             back_button = tk.Button(root,text='Back',font=('denmark',10),background='Black',fg='White',command=lambda:[trainer_home(),frame_4.destroy()])
@@ -661,14 +756,16 @@ class Trainer:
             #background image,gym name and gym moto
             tkinter_templates.display(root=root)
 
-            members_data = member_data.get_all_members()
-            key = ('ID ','Name','Age','Cardio','Batch','Day')
+            member_id_label = tk.Label(root,text='Member ID : ',font=('Denmark',16),background='Black',fg='White')
+            member_id_label.place(x=200,y=180)
 
-            table = tabulate(members_data,headers=key)
+            member_id_entry = tk.Entry(root,background='White',fg='Black')
+            member_id_entry.place(x=210+member_id_label.winfo_reqwidth(),y=185)
 
-            #table label
-            table_label = tk.Label(root,text=f"{table}",font=('Denmark',10),background='Black',fg='White')
-            table_label.place(x=int((700-table_label.winfo_reqwidth())/2),y=90)
+
+            #get member deatils button
+            details_button = tk.Button(root,text="Get Member Details",fg='White',background='Black',font=('Denamrk',13),command=lambda:[print_member_details(tuple((member_data.get_member_details(id_num=(member_id_entry.get()))).values())),Features.delete_widget([member_id_label,member_id_entry,details_button])])
+            details_button.place(x=250,y=215)
 
             #back button
             back_button = tk.Button(root,text='Back',font=('denmark',10),background='Black',fg='White',command=lambda:[trainer_home(),frame_6.destroy()])

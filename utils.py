@@ -5,7 +5,7 @@ import docx
 from docx.shared import Pt
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 import sqlite3
-from datetime import date
+from datetime import *
 import tkinter as tk
 from PIL import Image,ImageTk
 from abc import ABC,abstractmethod
@@ -17,14 +17,16 @@ cursor = connnection.cursor() #cursor allows us to execute sql commands, it is a
 class member_data:
 
     def create_table():
-        cursor.execute("CREATE TABLE IF NOT EXISTS member_data(id_num PRIMARY KEY ,name,age,cardio,batch,day)")
-        # connnection.commit()
+        cursor.execute("CREATE TABLE IF NOT EXISTS member_data(id_num PRIMARY KEY,Name,Cardio,Batch,Day,Gender,DOB,Address,Phone_Number,e_mail,Fathers Name,Membership Renewal Date)")
+        connnection.commit()
         print('Table Created')
 
 
     def add_member(member_details):
-        #order to be followed (id_num,name,age,cardio,batch,day)
-        cursor.execute(f"INSERT INTO member_data VALUES {member_details}")
+        #order to be followed (id_num,name,cardio,batch,day,gender,DOB,address,phone number,e_mail,father's name,membership renewal date)
+        cursor.execute(f"""
+                       INSERT INTO member_data VALUES {member_details}
+        """)
         connnection.commit()
 
 
@@ -38,10 +40,17 @@ class member_data:
             member = {
                 "id_num" : id_num,
                 "Name" : result[1],
-                "Age" : result[2],
-                "Day" : result[5],
-                "Cardio" : result[3],
-                "Batch" : result[4]
+                "Cardio" : result[2],
+                "Batch" : result[3],
+                "Day" : result[4],
+                "Gender" : result[5],
+                "DOB" : result[6],
+                "Address" : result[7],
+                "Phone Number" : result[8],
+                "e_mail" : result[9],
+                "father's name" : result[10],
+                "member renewal date" : result[11],
+                "Age" : str(int((date.today()-datetime.strptime(result[6],'%Y-%m-%d').date()).days/365.25))
                     }
             return member
         else:
@@ -308,3 +317,4 @@ class exercise_list_factory:
             return part_obj.get_exercise_list()
         except Exception:
             raise Exception("Unable to Create Object")
+
