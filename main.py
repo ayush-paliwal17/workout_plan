@@ -346,7 +346,7 @@ class Members:
             tkinter_templates.home(root=root)
 
             #greet Button
-            part_dict = {'1':'Chest-Triceps','2':'Back-Biceps','3':'Shoulders-Legs'}
+            part_dict = {'0':'Cardio','1':'Chest-Triceps','2':'Back-Biceps','3':'Shoulders-Legs'}
             greet = tk.Label(root,text=f"Hi, Welcome Back",background='black',fg='White',font=18)
             greet.place(x=int((700-greet.winfo_reqwidth())/2),y=80)
             final_data = f"  Name : {data['Name']}   id_num : {data['id_num']}   Phone Number : 9876543210\nAge : {data['Age']}   Address : Udaipur  Schedule : {part_dict[data['Day']]}"
@@ -498,12 +498,14 @@ class Trainer:
                 cardio_combobox['values'] = [value for value in cardio_combobox['values'] if value != selection]
 
 
-            def generate_custom_workout(name):
+            def generate_custom_workout(member_id):
 
                 res = {'Weight_Training': exercise_list, 
                         'Cardio': cardio_list}
 
+                Features.add_workout_to_DB(id_num=member_id,workout=res)
 
+                data = member_data.get_member_details(id_num=member_id)
                 wt = exercise_list
                 wt_str = '\n'.join(wt)
                 cardio = cardio_list
@@ -516,7 +518,7 @@ class Trainer:
                 tkinter_templates.display(root)
 
                 #greet label
-                greet_label = tk.Label(root,text=f"Hi Trainers,\n Workout generated for member : {name}",font=('Denmark',12),background='Black',fg='White')
+                greet_label = tk.Label(root,text=f"Hi Trainers,\n Workout generated for member : {data['Name']}",font=('Denmark',12),background='Black',fg='White')
                 greet_label.place(x=int((700-greet_label.winfo_reqwidth())/2),y=80)
 
                 #weight training label
@@ -549,7 +551,7 @@ class Trainer:
             tkinter_templates.home(root)
 
             #member_id label
-            member_id_label = tk.Label(root,text='Member Name',font=("Denmark",10),bg='Black',fg='White')
+            member_id_label = tk.Label(root,text='Member ID : ',font=("Denmark",10),bg='Black',fg='White')
             member_id_label.place(x=225,y=80)
 
             #member_id entry
@@ -785,14 +787,13 @@ class Trainer:
             key = ('ID ','Name',"Father's name",'Phone Number')
 
             members_data = []
-            for _ in range(10):
-                for item in res:
-                    members_data.append((item[0],item[1],item[10],item[8]))
+            for item in res:
+                members_data.append((item[0],item[1],item[10],item[8]))
 
             table = str(tabulate(members_data,headers=key,tablefmt='pretty',colalign=("center",)))
 
             # table label
-            table_label = scrolledtext.ScrolledText(root,font=('Denmark',13),background='Black',fg='White',width=50,height = 15)
+            table_label = scrolledtext.ScrolledText(root,font=('Denmark',13),background='Black',fg='White',width=45,height = 15)
             table_label.place(x=int((700-table_label.winfo_reqwidth())/2),y=90)
 
             table_label.insert(tk.INSERT,table)
@@ -801,6 +802,45 @@ class Trainer:
             #back button
             back_button = tk.Button(root,text='Back',font=('denmark',10),background='Black',fg='White',command=lambda:[trainer_home(),frame_7.destroy()])
             back_button.place(x=50,y=50)                
+
+
+        def delete_member():
+            def confirm_delete(id_num):
+                #display member details to be deleted
+                print_member_details(member_details=(tuple(member_data.get_member_details(id_num=id_num).values())))
+
+                #confirmation label
+                confirmation_label = tk.Label(root,text='MEMBER DELETED!',fg='White',background='Black',font=('Denmark',13))
+
+                #confirm delete button
+                confirm_delete_button = tk.Button(root,text='DELETE MEMBER',background='Black',fg='White',command=lambda:[member_data.delete_member(id_num=id_num),confirmation_label.place(x=325,y=350)])
+                confirm_delete_button.place(x=550,y=350)
+
+                #home button
+                home_button = tk.Button(root,text='Home',background='Black',fg='White',command=lambda:[trainer_home(),frame_8.destroy()])
+                home_button.place(x=50,y=50)
+
+            #creating a new frame
+            frame_8 = tk.Frame(root)
+            frame_8.pack(side='top',expand=True,fill='both')
+
+            
+            #background image,gym name and gym moto
+            tkinter_templates.display(root=root)
+
+            member_id_label = tk.Label(root,text='Member ID : ',font=('Denmark',16),background='Black',fg='White')
+            member_id_label.place(x=200,y=180)
+
+            member_id_entry = tk.Entry(root,background='White',fg='Black')
+            member_id_entry.place(x=210+member_id_label.winfo_reqwidth(),y=185)
+
+            #get member deatils button
+            delete_button = tk.Button(root,text="PROCEED",fg='White',background='Black',font=('Denamrk',13),command=lambda:[confirm_delete(member_id_entry.get()),Features.delete_widget([member_id_label,member_id_entry,delete_button])])
+            delete_button.place(x=250,y=215)
+
+            #home button
+            home_button = tk.Button(root,text='Home',background='Black',fg='White',command=lambda:[trainer_home(),frame_8.destroy()])
+            home_button.place(x=50,y=50)
 
 
         def trainer_home():
@@ -826,6 +866,11 @@ class Trainer:
             #All Member List button
             all_member = tk.Button(root,text='All Member List',font=('Denmark',15),fg='White',background='Black',command=lambda:[all_member_list(),frame_t.destroy()])
             all_member.place(x=int(700*3/4-add_member_button.winfo_reqwidth()/2),y=120)
+
+            #delete member button
+            delete_member_button = tk.Button(root,text='Delete Member',font=('Denmark',15),fg='White',background='Black',command=lambda:[delete_member(),frame_t.destroy()])
+            delete_member_button.place(x=int(700*3/4-add_member_button.winfo_reqwidth()/2),y=140+workout_button.winfo_reqheight())
+
 
             #Logout Button
             logout_button = tk.Button(root,text='LogOut',font=('Denmark',10),background='Black',fg='White',command= lambda:home(root))
