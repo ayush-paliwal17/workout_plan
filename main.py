@@ -5,6 +5,7 @@ from PIL import Image,ImageTk
 from tabulate import tabulate
 from tkcalendar import DateEntry
 import datetime
+from tkinter import scrolledtext
 
 class weight_training:
     def circuit(self,member_details):
@@ -772,6 +773,36 @@ class Trainer:
             back_button.place(x=50,y=50)                
 
 
+        def all_member_list():
+            frame_7 = tk.Frame(root)
+            frame_7.pack(side='top',expand=True,fill='both')
+
+
+            #background image,gym name and gym moto
+            tkinter_templates.display(root=root)
+            
+            res = member_data.get_all_members()
+            key = ('ID ','Name',"Father's name",'Phone Number')
+
+            members_data = []
+            for _ in range(10):
+                for item in res:
+                    members_data.append((item[0],item[1],item[10],item[8]))
+
+            table = str(tabulate(members_data,headers=key,tablefmt='pretty',colalign=("center",)))
+
+            # table label
+            table_label = scrolledtext.ScrolledText(root,font=('Denmark',13),background='Black',fg='White',width=50,height = 15)
+            table_label.place(x=int((700-table_label.winfo_reqwidth())/2),y=90)
+
+            table_label.insert(tk.INSERT,table)
+            table_label.configure(font=20,state='disabled',spacing1=5)
+
+            #back button
+            back_button = tk.Button(root,text='Back',font=('denmark',10),background='Black',fg='White',command=lambda:[trainer_home(),frame_7.destroy()])
+            back_button.place(x=50,y=50)                
+
+
         def trainer_home():
             #trainer home frame
             frame_t = tk.Frame(root)
@@ -791,6 +822,10 @@ class Trainer:
             #member_details button
             member_details = tk.Button(root,text='Check Member details',font=('Denmark',15),fg='White',background='Black',command=check_member_details)
             member_details.place(x=int(700/4-add_member_button.winfo_reqwidth()/2),y=200+workout_button.winfo_reqheight())
+
+            #All Member List button
+            all_member = tk.Button(root,text='All Member List',font=('Denmark',15),fg='White',background='Black',command=lambda:[all_member_list(),frame_t.destroy()])
+            all_member.place(x=int(700*3/4-add_member_button.winfo_reqwidth()/2),y=120)
 
             #Logout Button
             logout_button = tk.Button(root,text='LogOut',font=('Denmark',10),background='Black',fg='White',command= lambda:home(root))
