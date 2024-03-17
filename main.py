@@ -807,6 +807,7 @@ class Trainer:
                 #display member details to be deleted
                 print_member_details(member_details=(tuple(member_data.get_member_details(id_num=id_num).values())))
 
+
                 #confirmation label
                 confirmation_label = tk.Label(root,text='MEMBER DELETED!',fg='White',background='Black',font=('Denmark',13))
 
@@ -842,11 +843,26 @@ class Trainer:
 
 
         def edit_member():
-            def edit(id_num):
-                #back button
-                back_button = tk.Button(root,text='Back',font=('denmark',10),background='Black',fg='White',command=lambda:[edit_member()])
-                back_button.place(x=50,y=50)
+            def mem_details(id_num):
+                frame_11 = tk.Frame(root)
+                frame_11.pack(side='top',expand=True,fill='both')
+                
+                #background image,gym name and gym moto
+                tkinter_templates.display(root=root)
+                
+                #display member details to be deleted
+                print_member_details(member_details=(tuple(member_data.get_member_details(id_num=id_num).values())))
+                
+                edit_button = tk.Button(root,text="Edit Member",fg='White',background='Black',font=('Denamrk',13),command=lambda:[edit(id_num=member_id_entry.get()),frame_11.destroy()])
+                edit_button.place(x=550,y=350)
 
+            def edit(id_num):                
+                frame_10 = tk.Frame(root)
+                frame_10.pack(side='top',expand=True,fill='both')
+
+                #background image,gym name and gym moto
+                tkinter_templates.display(root=root)
+                
                 key_label = tk.Label(root,text='KEY : ',font=('Denamrk',13),fg='White',background='Black')
                 key_label.place(x=230,y=120)
 
@@ -862,15 +878,18 @@ class Trainer:
 
                 final_confirmation = tk.Label(root,text='Updated Successfully',font=('Denamrk',13),fg='White',background='Black')
 
-                confirm_button = tk.Button(root,text='Confirm Change',font=("Denamrk",14),fg='White',background='Black',command=lambda:[member_data.update_column(key=key_combobox.get(),value=value_entry.get(),id_value=id_num),final_confirmation.place(x=335,y=300)])
+                confirm_button = tk.Button(root,text='Confirm Change',font=("Denamrk",14),fg='White',background='Black',command=lambda:[member_data.update_column(key=key_combobox.get(),value=value_entry.get(),id_value=id_num),print_member_details(member_details=(tuple(member_data.get_member_details(id_num=id_num).values()))),final_confirmation.place(x=335,y=300),Features.delete_widget([key_label,key_combobox,value_entry,value_label,confirm_button])])
                 confirm_button.place(x=240,y=180)
+
+                #back button
+                back_button = tk.Button(root,text='Back',font=('denmark',10),background='Black',fg='White',command=lambda:[edit_member(),frame_10.destroy()])
+                back_button.place(x=50,y=50)
 
             frame_9 = tk.Frame(root)
             frame_9.pack(side='top',expand=True,fill='both')
 
             #background image,gym name and gym moto
             tkinter_templates.display(root=root)
-
 
             member_id_label = tk.Label(root,text='Member ID : ',font=('Denmark',16),background='Black',fg='White')
             member_id_label.place(x=200,y=180)
@@ -879,12 +898,13 @@ class Trainer:
             member_id_entry.place(x=210+member_id_label.winfo_reqwidth(),y=185)
 
             #get member deatils button
-            edit_button = tk.Button(root,text="Edit Member",fg='White',background='Black',font=('Denamrk',13),command=lambda:[edit(id_num=member_id_entry.get()),Features.delete_widget([member_id_entry,member_id_label,edit_button])])
+            edit_button = tk.Button(root,text="Edit Member",fg='White',background='Black',font=('Denamrk',13),command=lambda:[mem_details(id_num=member_id_entry.get()),frame_9.destroy()])
             edit_button.place(x=250,y=215)
 
             #back button
             back_button = tk.Button(root,text='Back',font=('denmark',10),background='Black',fg='White',command=lambda:[trainer_home(),frame_9.destroy()])
             back_button.place(x=50,y=50)
+
 
         def trainer_home():
             #trainer home frame
