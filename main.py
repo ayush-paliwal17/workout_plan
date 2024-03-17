@@ -419,7 +419,6 @@ class Members:
 
 class Trainer:
     def main(root):
-        
         def print_member_details(member_details):
             new_member_id_label = tk.Label(root,text=f'Member ID : {member_details[0]}',font=("Denmark",12),bg='Black',fg='White')
             new_member_id_label.place(x=95,y=110)
@@ -635,7 +634,7 @@ class Trainer:
                 print_member_details(member_details=new_member_details)
 
                 #back button
-                back_button = tk.Button(root,text='Back',font=('denmark',10),background='Black',fg='White',command=lambda:[add_member(),frame_5.destroy()])
+                back_button = tk.Button(root,text='Back',font=('denmark',10),background='Black',fg='White',command=lambda:[trainer_home(),frame_5.destroy()])
                 back_button.place(x=50,y=50)    
 
             #creating a new frame
@@ -765,7 +764,6 @@ class Trainer:
             member_id_entry = tk.Entry(root,background='White',fg='Black')
             member_id_entry.place(x=210+member_id_label.winfo_reqwidth(),y=185)
 
-
             #get member deatils button
             details_button = tk.Button(root,text="Get Member Details",fg='White',background='Black',font=('Denamrk',13),command=lambda:[print_member_details(tuple((member_data.get_member_details(id_num=(member_id_entry.get()))).values())),Features.delete_widget([member_id_label,member_id_entry,details_button])])
             details_button.place(x=250,y=215)
@@ -843,6 +841,51 @@ class Trainer:
             home_button.place(x=50,y=50)
 
 
+        def edit_member():
+            def edit(id_num):
+                #back button
+                back_button = tk.Button(root,text='Back',font=('denmark',10),background='Black',fg='White',command=lambda:[edit_member()])
+                back_button.place(x=50,y=50)
+
+                key_label = tk.Label(root,text='KEY : ',font=('Denamrk',13),fg='White',background='Black')
+                key_label.place(x=230,y=120)
+
+                key_combobox = ttk.Combobox()
+                key_combobox.place(x=290,y=120)
+                key_combobox['values'] = tuple(member_data.get_member_details(id_num=id_num).keys())
+
+                value_label = tk.Label(root,text='VALUE : ',font=('Denmark',13),fg='White',background='Black')
+                value_label.place(x=230,y=150)
+
+                value_entry = tk.Entry(root,fg='Black',background='White')
+                value_entry.place(x=300,y=150)
+
+                final_confirmation = tk.Label(root,text='Updated Successfully',font=('Denamrk',13),fg='White',background='Black')
+
+                confirm_button = tk.Button(root,text='Confirm Change',font=("Denamrk",14),fg='White',background='Black',command=lambda:[member_data.update_column(key=key_combobox.get(),value=value_entry.get(),id_value=id_num),final_confirmation.place(x=335,y=300)])
+                confirm_button.place(x=240,y=180)
+
+            frame_9 = tk.Frame(root)
+            frame_9.pack(side='top',expand=True,fill='both')
+
+            #background image,gym name and gym moto
+            tkinter_templates.display(root=root)
+
+
+            member_id_label = tk.Label(root,text='Member ID : ',font=('Denmark',16),background='Black',fg='White')
+            member_id_label.place(x=200,y=180)
+
+            member_id_entry = tk.Entry(root,background='White',fg='Black')
+            member_id_entry.place(x=210+member_id_label.winfo_reqwidth(),y=185)
+
+            #get member deatils button
+            edit_button = tk.Button(root,text="Edit Member",fg='White',background='Black',font=('Denamrk',13),command=lambda:[edit(id_num=member_id_entry.get()),Features.delete_widget([member_id_entry,member_id_label,edit_button])])
+            edit_button.place(x=250,y=215)
+
+            #back button
+            back_button = tk.Button(root,text='Back',font=('denmark',10),background='Black',fg='White',command=lambda:[trainer_home(),frame_9.destroy()])
+            back_button.place(x=50,y=50)
+
         def trainer_home():
             #trainer home frame
             frame_t = tk.Frame(root)
@@ -871,6 +914,9 @@ class Trainer:
             delete_member_button = tk.Button(root,text='Delete Member',font=('Denmark',15),fg='White',background='Black',command=lambda:[delete_member(),frame_t.destroy()])
             delete_member_button.place(x=int(700*3/4-add_member_button.winfo_reqwidth()/2),y=140+workout_button.winfo_reqheight())
 
+            #delete member button
+            edit_member_button = tk.Button(root,text='Edit Member',font=('Denmark',15),fg='White',background='Black',command=lambda:[edit_member(),frame_t.destroy()])
+            edit_member_button.place(x=int(700*3/4-add_member_button.winfo_reqwidth()/2),y=200+workout_button.winfo_reqheight())
 
             #Logout Button
             logout_button = tk.Button(root,text='LogOut',font=('Denmark',10),background='Black',fg='White',command= lambda:home(root))

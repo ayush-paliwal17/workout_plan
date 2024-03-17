@@ -30,6 +30,14 @@ class member_data:
         connnection.commit()
 
 
+    def delete_member(id_num):
+        #order to be followed (id_num,name,cardio,batch,day,gender,DOB,address,phone number,e_mail,father's name,membership renewal date)
+        cursor.execute(f"""
+                       DELETE FROM member_data WHERE id_num = '{id_num}'
+        """)
+        connnection.commit()
+
+
     def get_member_details(id_num):
         cursor.execute(f"""
             SELECT * from member_data
@@ -65,7 +73,7 @@ class member_data:
 
         return result
 
-    
+
     def update_column(key,value,id_value):
         cursor.execute(f"""
             UPDATE member_data
