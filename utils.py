@@ -68,6 +68,7 @@ class member_data:
     def get_all_members():
         cursor.execute(f"""
             SELECT * from member_data
+            ORDER BY id_num
         """)
         result = cursor.fetchall()
 
@@ -89,7 +90,16 @@ class member_data:
         """)
         result = cursor.fetchall()
 
-        return result
+        id_list = [int(x[0]) for x in result]
+        id_list.sort()
+        key = 1
+        if id_list:
+            for i in range(1,id_list[-1]+2):
+                if i not in id_list:
+                    key = i
+                    break
+        
+        return str(key)
 
 
 class Workout:
@@ -325,4 +335,3 @@ class exercise_list_factory:
             return part_obj.get_exercise_list()
         except Exception:
             raise Exception("Unable to Create Object")
-

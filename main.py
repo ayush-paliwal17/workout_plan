@@ -644,12 +644,8 @@ class Trainer:
             #background image,gym name and gym moto
             tkinter_templates.display(root)
 
-            #member_id label
-            data = member_data.get_all_members()
-            if data:
-                new_id = str(int(data[-1][0])+1)
-            else:
-                new_id = '0'
+            new_id = member_data.get_last_key()
+
             new_member_id_label = tk.Label(root,text=f'Member ID : {new_id}',font=("Denmark",12),bg='Black',fg='White')
             new_member_id_label.place(x=95,y=110)
 
