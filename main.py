@@ -349,7 +349,7 @@ class Members:
             part_dict = {'0':'Cardio','1':'Chest-Triceps','2':'Back-Biceps','3':'Shoulders-Legs'}
             greet = tk.Label(root,text=f"Hi, Welcome Back",background='black',fg='White',font=18)
             greet.place(x=int((700-greet.winfo_reqwidth())/2),y=80)
-            final_data = f"  Name : {data.get('Name')}   id_num : {data.get('id_num')}   Phone Number : {data.get('Phone Number')}\nAge : {data.get('Age')}   Address : Udaipur  Schedule : {part_dict.get([data.get('Day')])}"
+            final_data = f"  Name : {data.get('Name')}   id_num : {data.get('id_num')}   Phone Number : {data.get('Phone Number')}\nAge : {data.get('Age')}   Address : Udaipur  Schedule : {part_dict.get(data.get('Day'))}"
             member_data_label = tk.Message(root,text=final_data,font=('Denmark',13),background='Black',fg='White',width=700,justify='center')
             member_data_label.place(x=int((700-member_data_label.winfo_reqwidth())/2),y=110)
 
@@ -377,13 +377,12 @@ class Members:
         def get_input():
             member_id = myentry.get()
             if member_id:
-                try:
-                    member_details = member_data.get_member_details(id_num=member_id)
-                except:
+                member_details = member_data.get_member_details(id_num=member_id)
+                if member_details:
+                    member_home(member_details)
+                else:
                     wrong_id_label = tk.Label(root,text="Incorrect Member ID. Try Again",font=('Arial',10),background='Black',fg='Red')
                     wrong_id_label.place(x=int((700-wrong_id_label.winfo_reqwidth())/2),y=150)
-                else:
-                    member_home(member_details)
 
         #Home Image
         path = r'gallery\home.png'
@@ -516,8 +515,13 @@ class Trainer:
                 #background image,gym name and gym moto
                 tkinter_templates.display(root)
 
+                if data:
+                    name = data.get('Name')
+                else:
+                    name = ' '
+
                 #greet label
-                greet_label = tk.Label(root,text=f"Hi Trainers,\n Workout generated for member : {data.get('Name')}",font=('Denmark',12),background='Black',fg='White')
+                greet_label = tk.Label(root,text=f"Hi Trainers,\n Workout generated for member : {name}",font=('Denmark',12),background='Black',fg='White')
                 greet_label.place(x=int((700-greet_label.winfo_reqwidth())/2),y=80)
 
                 #weight training label
@@ -535,7 +539,7 @@ class Trainer:
                     cd_label_2.place(x=300,y=140+wt2_label.winfo_reqheight())
 
                 #print button
-                print_button = tk.Button(root,text='Print Workout',font=('Denmark',10),background='Black',fg='White',command=lambda: Features.print_doc(result_dict=res,name=member_id_entry.get(),part=Features.format_part_list(part_list=part_list)))
+                print_button = tk.Button(root,text='Print Workout',font=('Denmark',10),background='Black',fg='White',command=lambda: Features.print_doc(result_dict=res,name=name,part=Features.format_part_list(part_list=part_list)))
                 print_button.place(x=550,y=350)
 
                 #back button
@@ -1012,6 +1016,7 @@ def main():
     root = tk.Tk()
     root.title("Iron Fitness Gym")
     root.geometry("700x400")
+    root.resizable(False,False)
     home(root)
 
     root.mainloop()
