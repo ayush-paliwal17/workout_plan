@@ -501,7 +501,8 @@ class Trainer:
                 res = {'Weight_Training': exercise_list, 
                         'Cardio': cardio_list}
 
-                Features.add_workout_to_DB(id_num=member_id,workout=res)
+                if data:
+                    Features.add_workout_to_DB(id_num=member_id,workout=res)
 
                 data = member_data.get_member_details(id_num=member_id)
                 wt = exercise_list
@@ -971,7 +972,6 @@ class Trainer:
             else:
                 wrong_pass_label = tk.Label(root,text="Wrong Password. Try Again",font=('Arial',10),background='Black',fg='Red')
                 wrong_pass_label.place(x=int((700-wrong_pass_label.winfo_reqwidth())/2),y=150)
-
 
 
         #Creating a Frame
