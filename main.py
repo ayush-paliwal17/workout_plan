@@ -754,6 +754,15 @@ class Trainer:
 
 
         def check_member_details():
+            def cus_func():
+                data = member_data.get_member_details(id_num=(member_id_entry.get()))
+                if data:
+                    Features.delete_widget([member_id_label,member_id_entry,details_button])
+                    print_member_details(tuple(data.values()))
+                else:
+                    error_label = tk.Label(root,text='No Member Found',font=('Denmark',16),fg='White',background='Black')
+                    error_label.place(x=330,y=250)
+
             #frame
             frame_6 = tk.Frame(root)
             frame_6.pack(side='top',expand=True,fill='both')
@@ -768,7 +777,7 @@ class Trainer:
             member_id_entry.place(x=210+member_id_label.winfo_reqwidth(),y=185)
 
             #get member deatils button
-            details_button = tk.Button(root,text="Get Member Details",fg='White',background='Black',font=('Denamrk',13),command=lambda:[print_member_details(tuple((member_data.get_member_details(id_num=(member_id_entry.get()))).values())),Features.delete_widget([member_id_label,member_id_entry,details_button])])
+            details_button = tk.Button(root,text="Get Member Details",fg='White',background='Black',font=('Denamrk',13),command=lambda:[cus_func()])
             details_button.place(x=250,y=215)
 
             #back button
@@ -865,12 +874,21 @@ class Trainer:
                 
                 #background image,gym name and gym moto
                 tkinter_templates.display(root=root)
+
+                data = member_data.get_member_details(id_num=(member_id_entry.get()))
+                if data:
+                    print_member_details(tuple(data.values()))
+                    edit_button = tk.Button(root,text="Edit Member",fg='White',background='Black',font=('Denamrk',13),command=lambda:[edit(id_num=member_id_entry.get()),frame_11.destroy()])
+                    edit_button.place(x=550,y=350)
+                else:
+                    error_label = tk.Label(root,text='No Member Found',font=('Denmark',16),fg='White',background='Black')
+                    error_label.place(x=300,y=200)
+
+                # #display member details to be deleted
+                # print_member_details(member_details=(tuple(member_data.get_member_details(id_num=id_num).values())))
                 
-                #display member details to be deleted
-                print_member_details(member_details=(tuple(member_data.get_member_details(id_num=id_num).values())))
-                
-                edit_button = tk.Button(root,text="Edit Member",fg='White',background='Black',font=('Denamrk',13),command=lambda:[edit(id_num=member_id_entry.get()),frame_11.destroy()])
-                edit_button.place(x=550,y=350)
+                back_button = tk.Button(root,text='Back',font=('denmark',10),background='Black',fg='White',command=lambda:[edit_member(),frame_11.destroy()])
+                back_button.place(x=50,y=50)
 
             def edit(id_num):                
                 frame_10 = tk.Frame(root)
