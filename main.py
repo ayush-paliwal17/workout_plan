@@ -501,6 +501,8 @@ class Trainer:
                 res = {'Weight_Training': exercise_list, 
                         'Cardio': cardio_list}
 
+
+                data = member_data.get_member_details(id_num=member_id)
                 if data:
                     Features.add_workout_to_DB(id_num=member_id,workout=res)
 
