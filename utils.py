@@ -186,7 +186,7 @@ class Features:
     def get_history(id_num,dt):
         with open("workout_history.json") as f:
             fi_data = json.load(f)
-        queue = fi_data[id_num]
+        queue = fi_data.get(id_num)
         workout = None
         for history in queue:
             if history.get(dt):

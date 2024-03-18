@@ -9,39 +9,39 @@ from tkinter import scrolledtext
 
 class weight_training:
     def circuit(self,member_details):
-        if member_details["Batch"] == "A":
+        if member_details.get("Batch") == "A":
             member_data.update_column(key='Batch',value='B',id_value=member_details['id_num'])
             return(Workout.get_weight_training(ex_id=0.1))
 
-        elif member_details["Batch"] == "B":
+        elif member_details.get("Batch") == "B":
             member_data.update_column(key='Batch',value='A',id_value=member_details['id_num'])
             member_data.update_column(key='Day',value='1',id_value=member_details['id_num'])
             return(Workout.get_weight_training(ex_id=0.2))
 
 
     def chest_triceps(self,member_details):
-        if member_details["Batch"] == "A":
+        if member_details.get("Batch") == "A":
             return (Workout.get_weight_training(ex_id=1.1))
-        elif member_details["Batch"] == "B":
+        elif member_details.get("Batch") == "B":
             return (Workout.get_weight_training(ex_id=1.2))
         else:
             return (Workout.get_weight_training(ex_id=1.3))
 
 
     def back_biceps(self,member_details):
-        if member_details["Batch"] == "A":
+        if member_details.get("Batch") == "A":
             return (Workout.get_weight_training(ex_id=2.1))
-        elif member_details["Batch"] == "B":
+        elif member_details.get("Batch") == "B":
             return (Workout.get_weight_training(ex_id=2.2))
         else:
             return (Workout.get_weight_training(ex_id=2.3))
 
 
     def shoulders_legs(self,member_details):
-        if member_details["Batch"] == "A":
+        if member_details.get("Batch") == "A":
             member_data.update_column(key='Batch',value='B',id_value=member_details['id_num'])
             return (Workout.get_weight_training(ex_id=3.1))
-        elif member_details["Batch"] == "B":
+        elif member_details.get("Batch") == "B":
             member_data.update_column(key='Batch',value='C',id_value=member_details['id_num'])
             return (Workout.get_weight_training(ex_id=3.2))
         else:
@@ -51,30 +51,30 @@ class weight_training:
 
 class WorkoutPlan(weight_training):
     def circuit(self,member_details):
-        return {"Weight_Training" : super().circuit(member_details), "Cardio" : Workout.get_cardio(ex_id=1)} if member_details["Cardio"] == "Yes" else {"Weight_Training" : super().circuit(member_details)}
+        return {"Weight_Training" : super().circuit(member_details), "Cardio" : Workout.get_cardio(ex_id=1)} if member_details.get("Cardio") == "Yes" else {"Weight_Training" : super().circuit(member_details)}
 
     def chest_triceps(self,member_details):
-        return {"Weight_Training" : super().chest_triceps(member_details), "Cardio" : Workout.get_cardio(ex_id=2)} if member_details["Cardio"] == "Yes" else {"Weight_Training" : super().chest_triceps(member_details)}
+        return {"Weight_Training" : super().chest_triceps(member_details), "Cardio" : Workout.get_cardio(ex_id=2)} if member_details.get("Cardio") == "Yes" else {"Weight_Training" : super().chest_triceps(member_details)}
 
     def back_biceps(self,member_details):
-        return {"Weight_Training" : super().back_biceps(member_details), "Cardio" : Workout.get_cardio(ex_id=3)} if member_details["Cardio"] == "Yes" else {"Weight_Training" : super().back_biceps(member_details)}
+        return {"Weight_Training" : super().back_biceps(member_details), "Cardio" : Workout.get_cardio(ex_id=3)} if member_details.get("Cardio") == "Yes" else {"Weight_Training" : super().back_biceps(member_details)}
 
     def shoulders_legs(self,member_details):
-        return {"Weight_Training" : super().shoulders_legs(member_details), "Cardio" : Workout.get_cardio(ex_id=4)} if member_details["Cardio"] == "Yes" else {"Weight_Training" : super().shoulders_legs(member_details)}
+        return {"Weight_Training" : super().shoulders_legs(member_details), "Cardio" : Workout.get_cardio(ex_id=4)} if member_details.get("Cardio") == "Yes" else {"Weight_Training" : super().shoulders_legs(member_details)}
 
     def get_workout(self,member_details):
-        if member_details["Day"] == '0':
+        if member_details.get("Day") == '0':
             part = 'Cardio'
             workout = WorkoutPlan.circuit(self,member_details)
-        elif member_details["Day"] == '1':
+        elif member_details.get("Day") == '1':
             part = "Chest and Triceps"
             member_data.update_column(key='Day',value='2',id_value=member_details['id_num'])
             workout = WorkoutPlan.chest_triceps(self,member_details)
-        elif member_details["Day"] == '2':
+        elif member_details.get("Day") == '2':
             part = "Back and Biceps"
             workout = WorkoutPlan.back_biceps(self,member_details)
             member_data.update_column(key='Day',value='3',id_value=member_details['id_num'])
-        elif member_details["Day"] == '3':
+        elif member_details.get("Day") == '3':
             part = "Shoulders and Legs"
             member_data.update_column(key='Day',value='1',id_value=member_details['id_num'])
             workout = WorkoutPlan.shoulders_legs(self,member_details)
@@ -119,7 +119,7 @@ class Members:
                 res = {'Weight_Training': exercise_list, 
                         'Cardio': cardio_list}
 
-                Features.add_workout_to_DB(id_num=data['id_num'],workout=res)
+                Features.add_workout_to_DB(id_num=data.get('id_num'),workout=res)
 
                 wt = exercise_list
                 wt_str = '\n'.join(wt)
@@ -151,7 +151,7 @@ class Members:
                     cd_label_2.place(x=300,y=140+wt2_label.winfo_reqheight())
 
                 #print button
-                print_button = tk.Button(root,text='Print Workout',font=('Denmark',10),background='Black',fg='White',command=lambda: Features.print_doc(result_dict=res,name=data['Name'],part=Features.format_part_list(part_list=part_list)))
+                print_button = tk.Button(root,text='Print Workout',font=('Denmark',10),background='Black',fg='White',command=lambda: Features.print_doc(result_dict=res,name=data.get('Name'),part=Features.format_part_list(part_list=part_list)))
                 print_button.place(x=550,y=350)
 
                 #back button
@@ -166,7 +166,7 @@ class Members:
             tkinter_templates.home(root)
 
             #member_id label
-            member_name_label = tk.Label(root,text=f"Member Name : {data['Name']}",font=("Denmark",14),bg='Black',fg='White')
+            member_name_label = tk.Label(root,text=f"Member Name : {data.get('Name')}",font=("Denmark",14),bg='Black',fg='White')
             member_name_label.place(x=int((700-member_name_label.winfo_reqwidth())/2),y=80)
 
             #weight_training label
@@ -304,11 +304,11 @@ class Members:
             part_dict = {'1':'Chest-Triceps','2':'Back-Biceps','3':'Shoulders-Legs'}
             greet = tk.Label(root,text=f"Hi, Welcome Back",background='black',fg='White',font=18)
             greet.place(x=int((700-greet.winfo_reqwidth())/2),y=80)
-            final_data = f"  Name : {data['Name']}   id_num : {data['id_num']}   Phone Number : 9876543210\nAge : {data['Age']}   Address : Udaipur  Schedule : {part_dict[data['Day']]}"
+            final_data = f"  Name : {data.get('Name')}   id_num : {data.get('id_num')}   Phone Number : {data.get('Phone Number')}\nAge : {data['Age']}   Address : Udaipur  Schedule : {part_dict.get(data.get('Day'))}"
             member_data_label = tk.Message(root,text=final_data,font=('Denmark',13),background='Black',fg='White',width=700,justify='center')
             member_data_label.place(x=int((700-member_data_label.winfo_reqwidth())/2),y=110)
 
-            Features.add_workout_to_DB(id_num=data['id_num'],workout=res)
+            Features.add_workout_to_DB(id_num=data.get('id_num'),workout=res)
 
             wt = res['Weight_Training']
             wt_str = '\n'.join(wt)
@@ -329,7 +329,7 @@ class Members:
                 cd_label_2.place(x=300,y=310)
 
             #print button
-            print_button = tk.Button(root,text='Print Workout',font=('Denmark',10),background='Black',fg='White',command=lambda: Features.print_doc(result_dict=res,name=data['Name'],part=part))
+            print_button = tk.Button(root,text='Print Workout',font=('Denmark',10),background='Black',fg='White',command=lambda: Features.print_doc(result_dict=res,name=data.get('Name'),part=part))
             print_button.place(x=550,y=350)
 
             #back Button
@@ -349,7 +349,7 @@ class Members:
             part_dict = {'0':'Cardio','1':'Chest-Triceps','2':'Back-Biceps','3':'Shoulders-Legs'}
             greet = tk.Label(root,text=f"Hi, Welcome Back",background='black',fg='White',font=18)
             greet.place(x=int((700-greet.winfo_reqwidth())/2),y=80)
-            final_data = f"  Name : {data['Name']}   id_num : {data['id_num']}   Phone Number : 9876543210\nAge : {data['Age']}   Address : Udaipur  Schedule : {part_dict[data['Day']]}"
+            final_data = f"  Name : {data.get('Name')}   id_num : {data.get('id_num')}   Phone Number : {data.get('Phone Number')}\nAge : {data.get('Age')}   Address : Udaipur  Schedule : {part_dict.get([data.get('Day')])}"
             member_data_label = tk.Message(root,text=final_data,font=('Denmark',13),background='Black',fg='White',width=700,justify='center')
             member_data_label.place(x=int((700-member_data_label.winfo_reqwidth())/2),y=110)
 
@@ -366,7 +366,7 @@ class Members:
             workout_button.place(x=int(700/4-workout_button.winfo_reqwidth()/2),y=200)
 
             #Check Workout History button
-            history_button = tk.Button(root,text='Workout History',font=('Denmark',15),background='Black',fg='White',command=lambda: workout_history(id_num=data["id_num"],data=data))
+            history_button = tk.Button(root,text='Workout History',font=('Denmark',15),background='Black',fg='White',command=lambda: workout_history(id_num=data.get("id_num"),data=data))
             history_button.place(x=int(700*3/4-history_button.winfo_reqwidth()/2),y=200)
 
             #custom workout button
@@ -517,7 +517,7 @@ class Trainer:
                 tkinter_templates.display(root)
 
                 #greet label
-                greet_label = tk.Label(root,text=f"Hi Trainers,\n Workout generated for member : {data['Name']}",font=('Denmark',12),background='Black',fg='White')
+                greet_label = tk.Label(root,text=f"Hi Trainers,\n Workout generated for member : {data.get('Name')}",font=('Denmark',12),background='Black',fg='White')
                 greet_label.place(x=int((700-greet_label.winfo_reqwidth())/2),y=80)
 
                 #weight training label
