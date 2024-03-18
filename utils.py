@@ -62,7 +62,7 @@ class member_data:
                     }
             return member
         else:
-            raise(Exception)
+            return None
 
 
     def get_all_members():

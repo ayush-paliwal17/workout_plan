@@ -784,15 +784,18 @@ class Trainer:
             for item in res:
                 members_data.append((item[0],item[1],item[10],item[8]))
 
-            table = str(tabulate(members_data,headers=key,tablefmt='pretty',colalign=("center",)))
+            if members_data:
+                table = str(tabulate(members_data,headers=key,tablefmt='pretty',colalign=("center",)))
 
-            # table label
-            table_label = scrolledtext.ScrolledText(root,font=('Denmark',13),background='Black',fg='White',width=45,height = 15)
-            table_label.place(x=int((700-table_label.winfo_reqwidth())/2),y=90)
+                # table label
+                table_label = scrolledtext.ScrolledText(root,font=('Denmark',13),background='Black',fg='White',width=45,height = 15)
+                table_label.place(x=int((700-table_label.winfo_reqwidth())/2),y=90)
 
-            table_label.insert(tk.INSERT,table)
-            table_label.configure(font=20,state='disabled',spacing1=5)
-
+                table_label.insert(tk.INSERT,table)
+                table_label.configure(font=20,state='disabled',spacing1=5)
+            else:
+                error_label = tk.Label(root,text='No Member Found \n Add Members',font=('Denmark',16),fg='White',background='Black')
+                error_label.place(x=300,y=200)
             #back button
             back_button = tk.Button(root,text='Back',font=('denmark',10),background='Black',fg='White',command=lambda:[trainer_home(),frame_7.destroy()])
             back_button.place(x=50,y=50)                
@@ -800,16 +803,26 @@ class Trainer:
 
         def delete_member():
             def confirm_delete(id_num):
-                #display member details to be deleted
-                print_member_details(member_details=(tuple(member_data.get_member_details(id_num=id_num).values())))
+                data = member_data.get_member_details(id_num=id_num)
+                if data:
+                    c_frame = tk.Frame(root)
+                    c_frame.pack(side='top',expand=True,fill='both')
 
+                    tkinter_templates.display(root=root)
 
-                #confirmation label
-                confirmation_label = tk.Label(root,text='MEMBER DELETED!',fg='White',background='Black',font=('Denmark',13))
+                    member_details = (tuple(data.values()))
+                    #display member details to be deleted
+                    print_member_details(member_details=member_details)
 
-                #confirm delete button
-                confirm_delete_button = tk.Button(root,text='DELETE MEMBER',background='Black',fg='White',command=lambda:[member_data.delete_member(id_num=id_num),confirmation_label.place(x=325,y=350)])
-                confirm_delete_button.place(x=550,y=350)
+                    #confirmation label
+                    confirmation_label = tk.Label(root,text='MEMBER DELETED!',fg='White',background='Black',font=('Denmark',13))
+
+                    #confirm delete button
+                    confirm_delete_button = tk.Button(root,text='DELETE MEMBER',background='Black',fg='White',command=lambda:[member_data.delete_member(id_num=id_num),confirmation_label.place(x=325,y=350)])
+                    confirm_delete_button.place(x=550,y=350)
+                else:
+                    error_label = tk.Label(root,text='No member found',fg='White',background='Black',font=('Denmark',13))
+                    error_label.place(x=250,y=245)
 
                 #home button
                 home_button = tk.Button(root,text='Home',background='Black',fg='White',command=lambda:[trainer_home(),frame_8.destroy()])
@@ -830,7 +843,7 @@ class Trainer:
             member_id_entry.place(x=210+member_id_label.winfo_reqwidth(),y=185)
 
             #get member deatils button
-            delete_button = tk.Button(root,text="PROCEED",fg='White',background='Black',font=('Denamrk',13),command=lambda:[confirm_delete(member_id_entry.get()),Features.delete_widget([member_id_label,member_id_entry,delete_button])])
+            delete_button = tk.Button(root,text="PROCEED",fg='White',background='Black',font=('Denamrk',13),command=lambda:[confirm_delete(member_id_entry.get()),frame_8.destroy()])
             delete_button.place(x=250,y=215)
 
             #home button
